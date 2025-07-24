@@ -113,17 +113,17 @@ export default function Settings() {
           Prep Time
         </Text>
         <Text className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-          How many minutes should we wait before starting the next
+          How many seconds should we wait before starting the next
           exercise?
         </Text>
 
         <View className="flex-row items-center justify-between gap-2">
-          {[10, 15, 20, 25, 30].map((minutes) => (
+          {[10, 15, 20, 25, 30].map((seconds) => (
             <TouchableOpacity
-              key={minutes}
-              onPress={() => updatePrepTime(minutes)}
+              key={seconds}
+              onPress={() => updatePrepTime(seconds)}
               className={`flex-1 items-center rounded-md p-3 ${
-                settings.prepTime === minutes
+                settings.prepTime === seconds
                   ? "bg-blue-500"
                   : "bg-gray-200 dark:bg-gray-800"
               }`}
@@ -133,17 +133,17 @@ export default function Settings() {
                   name="time-outline"
                   size={16}
                   color={
-                    settings.prepTime === minutes ? "#FFFFFF" : "#6B7280"
+                    settings.prepTime === seconds ? "#FFFFFF" : "#6B7280"
                   }
                 />
                 <Text
                   className={`text-sm font-medium ${
-                    settings.prepTime === minutes
+                    settings.prepTime === seconds
                       ? "text-white"
                       : "text-gray-600 dark:text-gray-400"
                   }`}
                 >
-                  {minutes}m
+                  {seconds}s
                 </Text>
               </View>
             </TouchableOpacity>
