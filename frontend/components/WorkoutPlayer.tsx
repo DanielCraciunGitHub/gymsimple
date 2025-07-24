@@ -42,6 +42,9 @@ export default function WorkoutPlayer({
     currentExerciseIndexAtom
   );
   const setExercisesData = useSetAtom(exercisesDataAtom);
+  const [workoutStartTime, setWorkoutStartTime] = useState<Date>(
+    new Date()
+  );
 
   const [prepPhase, setPrepPhase] = useAtom(prepPhaseAtom);
   const [performSetPhase, setPerformSetPhase] = useAtom(
@@ -72,6 +75,7 @@ export default function WorkoutPlayer({
     setCompletedExercises([]);
     setActualReps([]);
     setExerciseRating(0);
+    setWorkoutStartTime(new Date());
   }, [
     setPrepPhase,
     setPerformSetPhase,
@@ -79,6 +83,7 @@ export default function WorkoutPlayer({
     setCurrentSetIndex,
     setCurrentExerciseIndex,
     setQuickLog,
+    setWorkoutStartTime,
   ]);
 
   useEffect(() => {
@@ -171,8 +176,9 @@ export default function WorkoutPlayer({
     } else {
       const completeWorkoutSession: WorkoutSession = {
         id: uuid.v4() as string,
-        date: new Date(),
+        date: workoutStartTime,
         exercises: updatedCompletedExercises,
+        endDate: new Date(Date.now()),
       };
 
       setExercisesData(completeWorkoutSession);

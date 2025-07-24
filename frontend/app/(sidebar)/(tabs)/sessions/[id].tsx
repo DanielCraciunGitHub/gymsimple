@@ -249,7 +249,12 @@ export default function SessionDetails() {
             {formatDate(sessionDate)}
           </Text>
           <Text className="mt-1 text-lg text-gray-600 dark:text-gray-300">
-            Started at {formatTime(sessionDate)}
+            {formatTime(sessionDate)} -{" "}
+            {formatTime(
+              session.endDate instanceof Date
+                ? session.endDate
+                : new Date(session.endDate)
+            )}
           </Text>
         </View>
 

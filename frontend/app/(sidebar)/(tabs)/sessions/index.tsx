@@ -130,14 +130,6 @@ export default function WorkoutSessions() {
           <Text className="text-2xl font-bold text-gray-800 dark:text-white">
             Workout Sessions
           </Text>
-          <View className="mt-2 flex-row justify-between">
-            <Text className="text-sm text-gray-600 dark:text-gray-300">
-              {getTotalExercises()} total exercises
-            </Text>
-            <Text className="ml-4 text-sm text-gray-600 dark:text-gray-300">
-              {getTotalSets()} total sets
-            </Text>
-          </View>
         </View>
         <View className="flex-row items-center gap-2">
           <TouchableOpacity

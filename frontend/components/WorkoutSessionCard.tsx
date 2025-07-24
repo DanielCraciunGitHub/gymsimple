@@ -27,6 +27,16 @@ export const WorkoutSessionCard: React.FC<WorkoutSessionCardProps> = ({
     });
   };
 
+  const formatWorkoutDuration = () => {
+    const startTime = formatTime(sessionDate);
+    const endDate =
+      session.endDate instanceof Date
+        ? session.endDate
+        : new Date(session.endDate);
+    const endTime = formatTime(endDate);
+    return `${startTime} - ${endTime}`;
+  };
+
   const getTotalSets = () => {
     return session.exercises.reduce(
       (total, exercise) => total + exercise.set.length,
@@ -55,8 +65,11 @@ export const WorkoutSessionCard: React.FC<WorkoutSessionCardProps> = ({
       {/* Header */}
       <View className="mb-3 flex-row items-center justify-between">
         <View className="flex-1">
-          <Text className="text-lg text-gray-600 dark:text-gray-300">
-            {formatDate(sessionDate)} at {formatTime(sessionDate)}
+          <Text className="text-lg font-semibold text-gray-800 dark:text-white">
+            {formatDate(sessionDate)}
+          </Text>
+          <Text className="text-sm text-gray-600 dark:text-gray-300">
+            {formatWorkoutDuration()}
           </Text>
         </View>
       </View>

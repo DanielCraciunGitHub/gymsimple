@@ -31,6 +31,7 @@ export const workoutSessionSchema = z.object({
   id: z.string(),
   date: z.coerce.date(),
   exercises: z.array(exerciseDataSchema),
+  endDate: z.coerce.date(),
 });
 
 export const exerciseDetailsArraySchema = z.array(exerciseDetailsSchema);
