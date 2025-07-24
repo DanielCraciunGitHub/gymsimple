@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 
 import { WorkoutSession } from "@/types/play";
 import { getItem, StorageKey } from "@/lib/local-storage";
@@ -85,18 +85,26 @@ export default function WorkoutSessions() {
 
   return (
     <View className="flex-1 bg-white dark:bg-black">
-      <View className="px-4 py-4">
-        <Text className="text-2xl font-bold text-gray-800 dark:text-white">
-          Workout Sessions ({workoutSessions.length})
-        </Text>
-        <View className="mt-2 flex-row justify-between">
-          <Text className="text-sm text-gray-600 dark:text-gray-300">
-            {getTotalExercises()} total exercises
+      <View className="flex-row items-center justify-between px-4 py-4">
+        <View>
+          <Text className="text-2xl font-bold text-gray-800 dark:text-white">
+            Workout Sessions ({workoutSessions.length})
           </Text>
-          <Text className="text-sm text-gray-600 dark:text-gray-300">
-            {getTotalSets()} total sets
-          </Text>
+          <View className="mt-2 flex-row justify-between">
+            <Text className="text-sm text-gray-600 dark:text-gray-300">
+              {getTotalExercises()} total exercises
+            </Text>
+            <Text className="ml-4 text-sm text-gray-600 dark:text-gray-300">
+              {getTotalSets()} total sets
+            </Text>
+          </View>
         </View>
+        <Pressable
+          className="rounded-lg bg-blue-500 px-4 py-2"
+          onPress={() => {}}
+        >
+          <Text className="font-medium text-white">Export</Text>
+        </Pressable>
       </View>
 
       <ScrollView className="flex-1 px-4 pb-4">
