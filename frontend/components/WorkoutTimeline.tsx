@@ -137,7 +137,7 @@ const ExerciseTimeline: React.FC<ExerciseTimelineProps> = ({
     steps.push({
       key: `${exercise.id}-prep`,
       title: "Get Ready",
-      subtitle: "Position yourself and prepare for the exercise",
+      subtitle: "Warm up, hydrate, and get ready to start",
       icon: "timer-outline",
       stepType: "preparation",
       duration: `${settings?.prepTime}s`,

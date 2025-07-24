@@ -118,7 +118,7 @@ export default function Settings() {
         </Text>
 
         <View className="flex-row items-center justify-between gap-2">
-          {[10, 15, 20, 25, 30].map((seconds) => (
+          {[20, 30, 60, 80, 100].map((seconds) => (
             <TouchableOpacity
               key={seconds}
               onPress={() => updatePrepTime(seconds)}
@@ -156,8 +156,8 @@ export default function Settings() {
           Auto Rest
         </Text>
         <Text className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-          Should we automatically rest between exercises? We&apos;ll count
-          down 3 seconds per rep before starting the rest timer.
+          Should we automatically start the rest timer for your next set?
+          We&apos;ll count down 3 seconds per rep before the rest period.
         </Text>
 
         <View className="flex-row items-center justify-between gap-2">
