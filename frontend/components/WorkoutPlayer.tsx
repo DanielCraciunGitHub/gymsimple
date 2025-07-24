@@ -152,6 +152,7 @@ export default function WorkoutPlayer({
       restTime: Number(currentExercise.targetRestTime),
       rating: exerciseRating,
       name: currentExercise.name,
+      weight: currentExercise.weight,
       set: actualReps.map((reps) => ({
         targetReps: Number(currentExercise.targetReps),
         actualReps: Number(reps) || 0,

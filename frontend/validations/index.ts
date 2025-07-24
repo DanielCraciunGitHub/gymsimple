@@ -17,6 +17,10 @@ export const exerciseDetailsSchema = z.object({
 export const exerciseDataSchema = z.object({
   id: z.string(),
   name: z.string(),
+  weight: z.object({
+    value: z.string(),
+    unit: z.enum(["kg", "lbs"]),
+  }),
   set: z.array(
     z.object({
       targetReps: z.number(),

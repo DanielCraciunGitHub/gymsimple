@@ -139,6 +139,7 @@ export default function SessionDetails() {
       totalActualReps,
       completionRate,
       avgRepsPerSet: totalActualReps / exercise.set.length,
+      weight: exercise.weight,
     };
   };
 
@@ -344,7 +345,7 @@ export default function SessionDetails() {
             Exercise Breakdown
           </Text>
 
-          {session.exercises.map((exercise, index) => {
+          {session.exercises.map((exercise) => {
             const exerciseStats = getExerciseStats(exercise);
 
             return (
@@ -355,7 +356,8 @@ export default function SessionDetails() {
                 {/* Exercise Header */}
                 <View className="mb-3 flex-row items-center justify-between">
                   <Text className="flex-1 text-lg font-semibold text-gray-800 dark:text-white">
-                    {exercise.name}
+                    {exercise.name} ({exercise.weight.value}
+                    {exercise.weight.unit})
                   </Text>
                   <View className="flex-row items-center">
                     <Text className="mr-1 text-sm text-gray-600 dark:text-gray-300">

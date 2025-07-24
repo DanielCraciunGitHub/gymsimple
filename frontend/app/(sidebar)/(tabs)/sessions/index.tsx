@@ -54,24 +54,6 @@ export default function WorkoutSessions() {
     router.push(`/sessions/${session.id}`);
   };
 
-  const getTotalExercises = () => {
-    return workoutSessions.reduce(
-      (total, session) => total + session.exercises.length,
-      0
-    );
-  };
-
-  const getTotalSets = () => {
-    return workoutSessions.reduce(
-      (total, session) =>
-        total +
-        session.exercises.reduce(
-          (exerciseTotal, exercise) => exerciseTotal + exercise.set.length,
-          0
-        ),
-      0
-    );
-  };
   const handleImport = async () => {
     try {
       const importedSessions = await importWorkoutSessions();

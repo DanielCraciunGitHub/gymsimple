@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import uuid from "react-native-uuid";
 
-import { isWholeNumber } from "@/lib/num";
+import { isValidNumber, isWholeNumber } from "@/lib/num";
 
 export const sortBySelectionOrder = (
   exercises: ExerciseDetails[]
@@ -98,9 +98,9 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
       case "weight":
         if (
           details.weight.value !== "" &&
-          !isWholeNumber(details.weight.value)
+          !isValidNumber(details.weight.value)
         ) {
-          setError("Weight must be a whole number");
+          setError("Weight must be a valid number");
           return false;
         }
         break;
@@ -183,7 +183,20 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
     ] as (keyof ExerciseDetails)[];
 
     if (numericFields.includes(field)) {
-      const sanitizedText = text.replace(/[^\d]/g, "");
+      let sanitizedText: string;
+
+      if (field === "weight") {
+        // Allow digits and one decimal point for weight
+        sanitizedText = text.replace(/[^\d.]/g, "");
+        // Ensure only one decimal point
+        const parts = sanitizedText.split(".");
+        if (parts.length > 2) {
+          sanitizedText = parts[0] + "." + parts.slice(1).join("");
+        }
+      } else {
+        // Only digits for other numeric fields
+        sanitizedText = text.replace(/[^\d]/g, "");
+      }
 
       if (field === "weight") {
         setDetails({
