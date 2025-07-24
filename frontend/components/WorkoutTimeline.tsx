@@ -221,6 +221,7 @@ export const WorkoutTimeline: React.FC = () => {
     ExerciseDetails[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState<ISettings | null>(null);
 
   const loadSelectedExercises = async () => {
     try {
@@ -239,9 +240,51 @@ export const WorkoutTimeline: React.FC = () => {
     }
   };
 
+  const loadSettings = async () => {
+    const settings = await getSettings();
+    if (settings) {
+      setSettings(settings);
+    }
+  };
+
+  const calculateEstimatedDuration = (): string => {
+    if (!settings || selectedExercises.length === 0) return "0s";
+
+    let totalSeconds = 0;
+
+    // Get Ready Period * exercises.length
+    totalSeconds += (settings.prepTime || 0) * selectedExercises.length;
+
+    // For each exercise: sets * reps * 3 + (sets - 1) * restTime
+    selectedExercises.forEach((exercise) => {
+      const sets = parseInt(exercise.targetSets) || 1;
+      const reps = parseInt(exercise.targetReps) || 1;
+      const restTime = parseInt(exercise.targetRestTime) || 0;
+
+      // sets * reps * 3 seconds per rep
+      totalSeconds += sets * reps * 3;
+
+      // Rest periods (sets - 1 because no rest after last set)
+      totalSeconds += (sets - 1) * restTime;
+    });
+
+    // Convert to minutes and seconds
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    if (minutes === 0) {
+      return `${seconds}s`;
+    } else if (seconds === 0) {
+      return `${minutes} min`;
+    } else {
+      return `${minutes} min ${seconds}s`;
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       loadSelectedExercises();
+      loadSettings();
     }, [])
   );
 
@@ -268,15 +311,22 @@ export const WorkoutTimeline: React.FC = () => {
 
   return (
     <View className="flex-1 bg-white dark:bg-black">
-      <View className="flex-row items-center justify-between px-6 pb-4 pt-6">
-        <Text className="text-2xl font-bold text-gray-800 dark:text-white">
-          Today&apos;s Workout
-        </Text>
-        <Link href="/play">
-          <View className="h-12 w-12 items-center justify-center rounded-full bg-blue-500 shadow-lg">
-            <Ionicons name="play" size={24} color="#FFFFFF" />
+      <View className="px-6 pb-4 pt-6">
+        <View className="flex-row items-center justify-between">
+          <View className="flex-1">
+            <Text className="text-2xl font-bold text-gray-800 dark:text-white">
+              Today&apos;s Workout
+            </Text>
+            <Text className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              Estimated duration: {calculateEstimatedDuration()}
+            </Text>
           </View>
-        </Link>
+          <Link href="/play">
+            <View className="h-12 w-12 items-center justify-center rounded-full bg-blue-500 shadow-lg">
+              <Ionicons name="play" size={24} color="#FFFFFF" />
+            </View>
+          </Link>
+        </View>
       </View>
 
       <ScrollView className="flex-1 px-6 py-6">

@@ -92,7 +92,11 @@ export default function WorkoutPlayer({
   }, [quickLog, currentExercise]);
 
   useEffect(() => {
-    if (settings.autoRest && performSetPhase) {
+    if (
+      settings.autoRest &&
+      performSetPhase &&
+      currentExercise?.targetReps
+    ) {
       const repsTime = Number(currentExercise.targetReps) * 3;
       setAutoRestCountdown(repsTime);
 
