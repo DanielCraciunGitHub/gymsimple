@@ -1,7 +1,15 @@
 import React, { useCallback, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { ExerciseCard } from "@/components/ExerciseCard";
@@ -114,12 +122,12 @@ export default function MyExercises() {
     <View className="flex-1 bg-white dark:bg-black">
       <View className="flex-row items-center justify-between px-4 py-4">
         <Text className="text-2xl font-bold text-gray-800 dark:text-white">
-          My Exercises ({exercises.length})
+          My Exercises
         </Text>
         <Link href="/exercises/add-exercise" asChild>
-          <Pressable className="h-8 w-8 items-center justify-center rounded-full bg-blue-500">
-            <Text className="text-xl font-bold text-white">+</Text>
-          </Pressable>
+          <TouchableOpacity className="items-center justify-center rounded-full bg-blue-500 p-2">
+            <Ionicons name="add-outline" size={30} color="white" />
+          </TouchableOpacity>
         </Link>
       </View>
 

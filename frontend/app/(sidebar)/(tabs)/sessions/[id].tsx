@@ -231,15 +231,15 @@ export default function SessionDetails() {
     <View className="flex-1 bg-white dark:bg-black">
       {/* Header */}
       <View className="border-b border-gray-200 bg-white px-4 py-4 dark:border-gray-700 dark:bg-gray-800">
-        <View className="flex-row items-center justify-between">
-          <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <View className="flex-row items-center justify-between">
             <Ionicons name="arrow-back" size={24} color="#6B7280" />
-          </TouchableOpacity>
-          <Text className="text-lg font-semibold text-gray-800 dark:text-white">
-            Session Details
-          </Text>
-          <View style={{ width: 24 }} />
-        </View>
+            <Text className="text-lg font-semibold text-gray-800 dark:text-white">
+              Session Details
+            </Text>
+            <View style={{ width: 24 }} />
+          </View>
+        </TouchableOpacity>
       </View>
 
       <ScrollView className="flex-1">

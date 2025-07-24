@@ -2,7 +2,13 @@ import React, { useCallback, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
-import { Alert, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Alert,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { WorkoutSession } from "@/types/play";
 import { exportWorkoutSessions } from "@/lib/export";
@@ -76,7 +82,9 @@ export default function WorkoutSessions() {
             index === self.findIndex((t) => t.id === session.id)
         )
         .sort((a, b) => {
-          return b.date.getTime() - a.date.getTime();
+          const dateA = a.date instanceof Date ? a.date : new Date(a.date);
+          const dateB = b.date instanceof Date ? b.date : new Date(b.date);
+          return dateB.getTime() - dateA.getTime();
         });
       setWorkoutSessions(uniqueSessions);
       await setItem(StorageKey.WORKOUT_SESSIONS, uniqueSessions);
@@ -98,12 +106,12 @@ export default function WorkoutSessions() {
         <Text className="mt-2 text-center text-gray-600 dark:text-gray-300">
           Complete your first workout to see your sessions here!
         </Text>
-        <Pressable
+        <TouchableOpacity
           className="rounded-lg bg-blue-500 px-4 py-2"
           onPress={handleImport}
         >
           <Ionicons name="cloud-upload-outline" size={20} color="white" />
-        </Pressable>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -125,7 +133,7 @@ export default function WorkoutSessions() {
           </View>
         </View>
         <View className="flex-row items-center gap-2">
-          <Pressable
+          <TouchableOpacity
             className="rounded-lg bg-blue-500 px-4 py-2"
             onPress={async () => {
               await exportWorkoutSessions(workoutSessions);
@@ -136,8 +144,8 @@ export default function WorkoutSessions() {
               size={20}
               color="white"
             />
-          </Pressable>
-          <Pressable
+          </TouchableOpacity>
+          <TouchableOpacity
             className="rounded-lg bg-blue-500 px-4 py-2"
             onPress={handleImport}
           >
@@ -146,7 +154,7 @@ export default function WorkoutSessions() {
               size={20}
               color="white"
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
 
