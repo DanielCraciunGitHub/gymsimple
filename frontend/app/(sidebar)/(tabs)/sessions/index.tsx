@@ -73,21 +73,28 @@ export default function WorkoutSessions() {
     );
   };
   const handleImport = async () => {
-    const importedSessions = await importWorkoutSessions();
-    if (importedSessions) {
-      const newSessions = [...importedSessions, ...workoutSessions];
-      const uniqueSessions = newSessions
-        .filter(
-          (session, index, self) =>
-            index === self.findIndex((t) => t.id === session.id)
-        )
-        .sort((a, b) => {
-          const dateA = a.date instanceof Date ? a.date : new Date(a.date);
-          const dateB = b.date instanceof Date ? b.date : new Date(b.date);
-          return dateB.getTime() - dateA.getTime();
-        });
-      setWorkoutSessions(uniqueSessions);
-      await setItem(StorageKey.WORKOUT_SESSIONS, uniqueSessions);
+    try {
+      const importedSessions = await importWorkoutSessions();
+      if (importedSessions) {
+        const newSessions = [...importedSessions, ...workoutSessions];
+        const uniqueSessions = newSessions
+          .filter(
+            (session, index, self) =>
+              index === self.findIndex((t) => t.id === session.id)
+          )
+          .sort((a, b) => {
+            const dateA =
+              a.date instanceof Date ? a.date : new Date(a.date);
+            const dateB =
+              b.date instanceof Date ? b.date : new Date(b.date);
+            return dateB.getTime() - dateA.getTime();
+          });
+        setWorkoutSessions(uniqueSessions);
+        await setItem(StorageKey.WORKOUT_SESSIONS, uniqueSessions);
+      }
+    } catch (error) {
+      console.error("Error importing workout sessions:", error);
+      Alert.alert("Error", "Check your file format and try again.");
     }
   };
 

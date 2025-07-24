@@ -97,15 +97,20 @@ export default function MyExercises() {
   };
 
   const handleImport = async () => {
-    const importedExercises = await importExercises();
-    if (importedExercises) {
-      const newExercises = [...importedExercises, ...exercises];
-      const uniqueExercises = newExercises.filter(
-        (exercise, index, self) =>
-          index === self.findIndex((t) => t.id === exercise.id)
-      );
-      setExercises(uniqueExercises);
-      await setItem(StorageKey.EXERCISES, uniqueExercises);
+    try {
+      const importedExercises = await importExercises();
+      if (importedExercises) {
+        const newExercises = [...importedExercises, ...exercises];
+        const uniqueExercises = newExercises.filter(
+          (exercise, index, self) =>
+            index === self.findIndex((t) => t.id === exercise.id)
+        );
+        setExercises(uniqueExercises);
+        await setItem(StorageKey.EXERCISES, uniqueExercises);
+      }
+    } catch (error) {
+      console.error("Error importing exercises:", error);
+      Alert.alert("Error", "Check your file format and try again.");
     }
   };
 
