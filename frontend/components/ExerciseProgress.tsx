@@ -10,11 +10,19 @@ import { Text, View } from "react-native";
 interface ExerciseProgressProps {
   totalSets: number;
   exerciseName: string;
+  exerciseWeight:
+    | {
+        value: string;
+        unit: "kg" | "lbs";
+      }
+    | null
+    | undefined;
 }
 
 export default function ExerciseProgress({
   totalSets,
   exerciseName,
+  exerciseWeight,
 }: ExerciseProgressProps) {
   const [currentSetIndex] = useAtom(currentSetIndexAtom);
   const [prepPhase] = useAtom(prepPhaseAtom);
@@ -26,8 +34,13 @@ export default function ExerciseProgress({
   return (
     <View className="absolute left-0 right-0 top-16 z-10 px-4">
       <Text className="mb-2 text-center text-sm text-white opacity-90">
-        {exerciseName} - Set {Math.min(displaySetIndex, totalSets)} of{" "}
-        {totalSets}
+        {exerciseName}{" "}
+        {exerciseWeight?.value && exerciseWeight.value !== "0" && (
+          <Text className="font-bold">
+            ({exerciseWeight.value} {exerciseWeight.unit})
+          </Text>
+        )}
+        - Set {Math.min(displaySetIndex, totalSets)} of {totalSets}
       </Text>
 
       <View className="flex-row items-center justify-center">

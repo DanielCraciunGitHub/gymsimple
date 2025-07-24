@@ -206,6 +206,7 @@ export default function WorkoutPlayer({
           <ExerciseProgress
             totalSets={Number(currentExercise.targetSets)}
             exerciseName={currentExercise.name}
+            exerciseWeight={currentExercise.weight}
           />
         )}
 
