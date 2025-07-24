@@ -34,7 +34,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
   return (
     <TouchableOpacity
-      className={`mb-3 rounded-lg border-2 p-4 shadow-sm ${
+      className={`mb-6 rounded-lg border-2 p-4 shadow-sm ${
         isSelected
           ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
           : "border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
