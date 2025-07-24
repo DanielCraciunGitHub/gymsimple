@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ExerciseDetails } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 
+import { getSettings, ISettings } from "@/config/settings";
 import { getItem, StorageKey } from "@/lib/local-storage";
 
 import { sortBySelectionOrder } from "./ExerciseInput";
@@ -106,6 +107,19 @@ const ExerciseTimeline: React.FC<ExerciseTimelineProps> = ({
   const reps = exercise.targetReps;
   const restTime = exercise.targetRestTime;
 
+  const [settings, setSettings] = useState<ISettings | null>(null);
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      const settings = await getSettings();
+      if (settings) {
+        setSettings(settings);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
   const generateTimelineSteps = () => {
     const steps: (TimelineStepProps & { key: string })[] = [];
 
@@ -126,7 +140,7 @@ const ExerciseTimeline: React.FC<ExerciseTimelineProps> = ({
       subtitle: "Position yourself and prepare for the exercise",
       icon: "timer-outline",
       stepType: "preparation",
-      duration: "30s",
+      duration: `${settings?.prepTime}s`,
       isLast: false,
     });
 
