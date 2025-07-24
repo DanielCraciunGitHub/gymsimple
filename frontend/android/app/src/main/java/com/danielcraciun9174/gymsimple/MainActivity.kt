@@ -1,4 +1,4 @@
-package com.danielcraciun9174.gymtime
+package com.danielcraciun9174.gymsimple
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

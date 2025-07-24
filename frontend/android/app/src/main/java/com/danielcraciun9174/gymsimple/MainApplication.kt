@@ -1,4 +1,4 @@
-package com.danielcraciun9174.gymtime
+package com.danielcraciun9174.gymsimple
 
 import android.app.Application
 import android.content.res.Configuration
