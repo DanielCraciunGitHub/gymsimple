@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
+  AUTO_REST,
   DEFAULT_PREP_TIME,
   DEFAULT_WORKOUT_REMINDER_TIME,
   getSettings,
@@ -22,6 +23,7 @@ export default function Play() {
   const [settings, setSettings] = useState<ISettings>({
     workoutReminderTime: DEFAULT_WORKOUT_REMINDER_TIME,
     prepTime: DEFAULT_PREP_TIME,
+    autoRest: AUTO_REST,
   });
 
   useEffect(() => {
