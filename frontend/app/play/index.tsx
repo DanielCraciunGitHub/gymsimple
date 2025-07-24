@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ExerciseDetails } from "@/validations";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
@@ -10,10 +11,7 @@ import {
 } from "@/config/settings";
 import { getItem, StorageKey } from "@/lib/local-storage";
 import { usePlayBackground } from "@/hooks/play-background";
-import {
-  ExerciseDetails,
-  sortBySelectionOrder,
-} from "@/components/ExerciseInput";
+import { sortBySelectionOrder } from "@/components/ExerciseInput";
 import WorkoutPlayer from "@/components/WorkoutPlayer";
 import WorkoutProgress from "@/components/WorkoutProgress";
 

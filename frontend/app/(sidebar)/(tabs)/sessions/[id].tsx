@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { ExerciseData, WorkoutSession } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -10,7 +11,6 @@ import {
   View,
 } from "react-native";
 
-import { ExerciseData, WorkoutSession } from "@/types/play";
 import { formatDate, formatTime } from "@/lib/date";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 

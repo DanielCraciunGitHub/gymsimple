@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ExerciseDetails } from "@/validations";
 import {
   Pressable,
   Text,
@@ -10,21 +11,6 @@ import uuid from "react-native-uuid";
 
 import { isWholeNumber } from "@/lib/num";
 
-export interface ExerciseDetails {
-  id: string;
-  name: string;
-  targetSets: string;
-  targetReps: string;
-  targetRestTime: string;
-  weight: {
-    value: string;
-    unit: "kg" | "lbs";
-  };
-  selected: boolean;
-  selectionOrder?: number; // Track the order in which exercises were selected
-}
-
-// Utility function to sort exercises by selection order
 export const sortBySelectionOrder = (
   exercises: ExerciseDetails[]
 ): ExerciseDetails[] => {

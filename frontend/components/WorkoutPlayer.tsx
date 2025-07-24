@@ -8,6 +8,11 @@ import {
   quickLogAtom,
   restPhaseAtom,
 } from "@/atoms/play";
+import {
+  ExerciseData,
+  ExerciseDetails,
+  WorkoutSession,
+} from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtom, useSetAtom } from "jotai";
@@ -15,12 +20,10 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import uuid from "react-native-uuid";
 
-import { ExerciseData, WorkoutSession } from "@/types/play";
 import { ISettings } from "@/config/settings";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { usePlayBackground } from "@/hooks/play-background";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { ExerciseDetails } from "@/components/ExerciseInput";
 import ExerciseProgress from "@/components/ExerciseProgress";
 
 import { StarRating } from "./StarRating";

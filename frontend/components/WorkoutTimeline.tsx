@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { ExerciseDetails } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
@@ -6,7 +7,7 @@ import { ScrollView, Text, View } from "react-native";
 
 import { getItem, StorageKey } from "@/lib/local-storage";
 
-import { ExerciseDetails, sortBySelectionOrder } from "./ExerciseInput";
+import { sortBySelectionOrder } from "./ExerciseInput";
 
 interface TimelineStepProps {
   title: string;

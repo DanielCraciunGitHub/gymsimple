@@ -1,7 +1,6 @@
+import { WorkoutSession } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
-
-import { WorkoutSession } from "@/types/play";
 
 interface WorkoutSessionCardProps {
   session: WorkoutSession;

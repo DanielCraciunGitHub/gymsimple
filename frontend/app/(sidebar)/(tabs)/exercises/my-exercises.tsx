@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { ExerciseDetails } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
@@ -15,7 +16,6 @@ import { exportExercises } from "@/lib/export";
 import { importExercises } from "@/lib/import";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { ExerciseCard } from "@/components/ExerciseCard";
-import { ExerciseDetails } from "@/components/ExerciseInput";
 
 export default function MyExercises() {
   const [exercises, setExercises] = useState<ExerciseDetails[]>([]);

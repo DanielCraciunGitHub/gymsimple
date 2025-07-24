@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
+import { ExerciseDetails } from "@/validations";
 import { router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
 
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
-import {
-  ExerciseDetails,
-  ExerciseInput,
-} from "@/components/ExerciseInput";
+import { ExerciseInput } from "@/components/ExerciseInput";
 
 export default function Workouts() {
   const { id } = useLocalSearchParams();

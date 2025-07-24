@@ -1,9 +1,8 @@
 import React from "react";
+import { ExerciseDetails } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
-
-import { ExerciseDetails } from "./ExerciseInput";
 
 interface ExerciseCardProps {
   exercise: ExerciseDetails;

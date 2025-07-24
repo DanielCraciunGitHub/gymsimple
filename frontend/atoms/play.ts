@@ -1,6 +1,5 @@
+import { WorkoutSession } from "@/validations";
 import { atom } from "jotai";
-
-import { WorkoutSession } from "@/types/play";
 
 export const prepPhaseAtom = atom(true);
 export const performSetPhaseAtom = atom(false);
