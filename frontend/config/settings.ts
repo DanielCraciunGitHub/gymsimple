@@ -2,7 +2,7 @@ import { getItem, StorageKey } from "@/lib/local-storage";
 
 export const DEFAULT_WORKOUT_REMINDER_TIME = 30;
 export const DEFAULT_PREP_TIME = 30;
-export const AUTO_REST = false;
+export const AUTO_REST = true;
 
 export interface ISettings {
   workoutReminderTime: number;
