@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
 import {
+  ActivityIndicator,
   Alert,
   Pressable,
   ScrollView,
@@ -116,7 +117,9 @@ export default function MyExercises() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white dark:bg-black" />
+      <View className="flex-1 items-center justify-center bg-white dark:bg-black">
+        <ActivityIndicator size="large" color="blue" />
+      </View>
     );
   }
 

@@ -55,7 +55,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
               <View className="h-full w-full rounded-full bg-white" />
             )}
           </View>
-          <Text className="text-lg font-semibold text-gray-800 dark:text-white">
+          <Text className="text-base font-semibold text-gray-800 dark:text-white">
             {exercise.name}
           </Text>
           {isSelected && exercise.selectionOrder && (

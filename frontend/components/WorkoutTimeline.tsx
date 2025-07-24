@@ -3,7 +3,7 @@ import { ExerciseDetails } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 import { getSettings, ISettings } from "@/config/settings";
 import { getItem, StorageKey } from "@/lib/local-storage";
@@ -290,7 +290,9 @@ export const WorkoutTimeline: React.FC = () => {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white dark:bg-black" />
+      <View className="flex-1 items-center justify-center bg-white dark:bg-black">
+        <ActivityIndicator size="large" color="blue" />
+      </View>
     );
   }
 
