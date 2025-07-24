@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import uuid from "react-native-uuid";
 
+import { isWholeNumber } from "@/lib/num";
+
 export interface ExerciseDetails {
   id: string;
   name: string;
@@ -61,6 +63,7 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
 }) => {
   const [details, setDetails] = useState<ExerciseDetails>(initialValues);
   const [currentStep, setCurrentStep] = useState(0);
+  const [error, setError] = useState<string>("");
 
   const steps = [
     {
@@ -95,18 +98,86 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
     },
   ];
 
+  const validateCurrentStep = (): boolean => {
+    const field = steps[currentStep].field;
+    setError("");
+
+    switch (field) {
+      case "name":
+        if (!details.name || details.name.trim().length === 0) {
+          setError("Name must be at least one character");
+          return false;
+        }
+        break;
+      case "weight":
+        if (
+          details.weight.value !== "" &&
+          !isWholeNumber(details.weight.value)
+        ) {
+          setError("Weight must be a whole number");
+          return false;
+        }
+        break;
+      case "targetSets":
+        if (!isWholeNumber(details.targetSets)) {
+          setError("Sets must be a whole number and less than 6");
+          return false;
+        }
+        const sets = parseInt(details.targetSets);
+        if (sets < 1 || sets > 6) {
+          setError("Sets must be between 1 and 6");
+          return false;
+        }
+        break;
+      case "targetReps":
+        if (!isWholeNumber(details.targetReps)) {
+          setError("Reps must be a whole number");
+          return false;
+        }
+        const reps = parseInt(details.targetReps);
+        if (reps < 1) {
+          setError("Reps must be greater than 0");
+          return false;
+        }
+        break;
+      case "targetRestTime":
+        if (!isWholeNumber(details.targetRestTime)) {
+          setError("Rest time must be a whole number");
+          return false;
+        }
+        const restTime = parseInt(details.targetRestTime);
+        if (restTime < 30) {
+          setError("Rest time must be greater than 30 seconds");
+          return false;
+        }
+        break;
+    }
+
+    return true;
+  };
+
   const handleSubmit = () => {
+    if (!validateCurrentStep()) {
+      return;
+    }
+
     onSubmit({
       ...details,
       id:
         initialValues.id === "" ? (uuid.v4() as string) : initialValues.id,
     });
     setDetails(defaultValues);
+    setError("");
   };
 
   const handleNext = () => {
+    if (!validateCurrentStep()) {
+      return;
+    }
+
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
+      setError("");
     }
   };
 
@@ -118,11 +189,24 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
 
   const handleInputChange = (text: string) => {
     const field = steps[currentStep].field;
-    if (field === "weight") {
-      setDetails({
-        ...details,
-        weight: { ...details.weight, value: text },
-      });
+    const numericFields = [
+      "weight",
+      "targetSets",
+      "targetReps",
+      "targetRestTime",
+    ] as (keyof ExerciseDetails)[];
+
+    if (numericFields.includes(field)) {
+      const sanitizedText = text.replace(/[^\d]/g, "");
+
+      if (field === "weight") {
+        setDetails({
+          ...details,
+          weight: { ...details.weight, value: sanitizedText },
+        });
+      } else {
+        setDetails({ ...details, [field]: sanitizedText });
+      }
     } else {
       setDetails({ ...details, [field]: text });
     }
@@ -205,7 +289,11 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
             {currentStepData.label}
           </Text>
           <TextInput
-            className="h-14 w-full rounded-md border border-gray-300 px-4 text-lg focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+            className={`h-14 w-full rounded-md border px-4 text-lg focus:border-blue-500 dark:bg-gray-800 dark:text-white ${
+              error
+                ? "border-red-500"
+                : "border-gray-300 dark:border-gray-600"
+            }`}
             value={currentValue}
             onChangeText={handleInputChange}
             placeholder={currentStepData.placeholder}
@@ -224,6 +312,9 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
             }
             submitBehavior="submit"
           />
+          {error ? (
+            <Text className="mt-2 text-sm text-red-500">{error}</Text>
+          ) : null}
           {currentStepData.field === "weight" && (
             <View className="mt-4 flex-row items-center justify-center gap-4">
               <Pressable
