@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "gymtime",
-    "slug": "gymtime",
+    "name": "gymsimple",
+    "slug": "gymsimple",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "gymtime",
+    "scheme": "gymsimple",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -17,7 +17,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.danielcraciun9174.gymtime"
+      "package": "com.danielcraciun9174.gymsimple"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +38,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6c553586-9816-4034-93b1-e270d8cd9777"
+      }
     }
   }
 }
