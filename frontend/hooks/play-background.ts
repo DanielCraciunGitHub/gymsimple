@@ -24,7 +24,7 @@ export const usePlayBackground = () => {
     }
 
     if (performSetPhase) {
-      return "bg-blue-500";
+      return "bg-orange-500";
     }
 
     if (restPhase) {
@@ -35,6 +35,6 @@ export const usePlayBackground = () => {
       return "bg-purple-500";
     }
 
-    return "bg-blue-500";
+    return "bg-orange-500";
   }, [isPaused, prepPhase, performSetPhase, restPhase, quickLog]);
 };

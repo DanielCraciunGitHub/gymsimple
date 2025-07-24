@@ -4,6 +4,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
+  AUTO_REST,
   DEFAULT_PREP_TIME,
   DEFAULT_WORKOUT_REMINDER_TIME,
   getSettings,
@@ -15,6 +16,7 @@ export default function Settings() {
   const [settings, setSettings] = useState<ISettings>({
     workoutReminderTime: DEFAULT_WORKOUT_REMINDER_TIME,
     prepTime: DEFAULT_PREP_TIME,
+    autoRest: AUTO_REST,
   });
 
   useEffect(() => {
@@ -42,6 +44,16 @@ export default function Settings() {
       ...settings,
       prepTime: minutes,
     };
+    await setItem(StorageKey.SETTINGS, newSettings);
+    setSettings(newSettings);
+  };
+
+  const updateAutoRest = async (autoRest: boolean) => {
+    const newSettings = {
+      ...settings,
+      autoRest,
+    };
+    console.log("newSettings", newSettings);
     await setItem(StorageKey.SETTINGS, newSettings);
     setSettings(newSettings);
   };
@@ -132,6 +144,49 @@ export default function Settings() {
                   }`}
                 >
                   {minutes}m
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      <View className="rounded-lg bg-gray-100 p-4 dark:bg-gray-900">
+        <Text className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          Auto Rest
+        </Text>
+        <Text className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+          Should we automatically rest between exercises? We&apos;ll count
+          down 3 seconds per rep before starting the rest timer.
+        </Text>
+
+        <View className="flex-row items-center justify-between gap-2">
+          {[true, false].map((autoRest) => (
+            <TouchableOpacity
+              key={autoRest.toString()}
+              onPress={() => updateAutoRest(autoRest)}
+              className={`flex-1 items-center rounded-md p-3 ${
+                settings.autoRest === autoRest
+                  ? "bg-blue-500"
+                  : "bg-gray-200 dark:bg-gray-800"
+              }`}
+            >
+              <View className="flex-row items-center gap-1">
+                <Ionicons
+                  name="time-outline"
+                  size={16}
+                  color={
+                    settings.autoRest === autoRest ? "#FFFFFF" : "#6B7280"
+                  }
+                />
+                <Text
+                  className={`text-sm font-medium ${
+                    settings.autoRest === autoRest
+                      ? "text-white"
+                      : "text-gray-600 dark:text-gray-400"
+                  }`}
+                >
+                  {autoRest ? "Yes" : "No"}
                 </Text>
               </View>
             </TouchableOpacity>

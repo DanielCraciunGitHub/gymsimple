@@ -19,12 +19,14 @@ export const CountdownTimer = ({
   useEffect(() => {
     if (!isPaused) {
       const interval = setInterval(() => {
-        setTimeLeft(timeLeft - 1);
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            onComplete();
+            return 0;
+          }
+          return prev - 1;
+        });
       }, 1000);
-
-      if (timeLeft === 0) {
-        onComplete();
-      }
 
       return () => clearInterval(interval);
     }
@@ -45,6 +47,7 @@ export const CountdownTimer = ({
           onPress={() => {
             setTimeLeft(0);
             setIsPaused(false);
+            onComplete();
           }}
         >
           <Ionicons

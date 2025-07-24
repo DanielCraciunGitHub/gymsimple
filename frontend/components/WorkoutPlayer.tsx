@@ -54,9 +54,11 @@ export default function WorkoutPlayer({
   >([]);
 
   const currentExercise = exercises[currentExerciseIndex];
+  const [autoRestCountdown, setAutoRestCountdown] = useState<number>(-1);
 
   const backgroundColor = usePlayBackground();
 
+  // Initializes the workout session
   useEffect(() => {
     setPrepPhase(true);
     setPerformSetPhase(false);
@@ -85,6 +87,46 @@ export default function WorkoutPlayer({
       setExerciseRating(0);
     }
   }, [quickLog, currentExercise]);
+
+  useEffect(() => {
+    if (settings.autoRest && performSetPhase) {
+      const repsTime = Number(currentExercise.targetReps) * 3;
+      setAutoRestCountdown(repsTime);
+
+      const interval = setInterval(() => {
+        setAutoRestCountdown((prev) => {
+          if (prev <= 1) {
+            const currentSet = currentSetIndex;
+            const totalSets = Number(currentExercise.targetSets);
+
+            setTimeout(() => {
+              setPerformSetPhase(false);
+              if (currentSet < totalSets - 1) {
+                setRestPhase(true);
+              } else {
+                setQuickLog(true);
+              }
+            }, 0);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    } else if (!performSetPhase) {
+      setAutoRestCountdown(-1);
+    }
+  }, [
+    settings.autoRest,
+    performSetPhase,
+    currentExercise?.targetReps,
+    currentExercise?.targetSets,
+    currentSetIndex,
+    setPerformSetPhase,
+    setRestPhase,
+    setQuickLog,
+  ]);
 
   const updateActualReps = (setIndex: number, reps: string) => {
     const newReps = [...actualReps];
@@ -181,6 +223,17 @@ export default function WorkoutPlayer({
               {currentExercise.targetReps} reps
             </Text>
 
+            {settings.autoRest && autoRestCountdown > 0 && (
+              <View className="mt-8 items-center">
+                <Text className="mb-2 text-lg text-gray-300">
+                  Auto rest in:
+                </Text>
+                <Text className="text-4xl font-bold text-yellow-400">
+                  {autoRestCountdown}s
+                </Text>
+              </View>
+            )}
+
             <TouchableOpacity
               onPress={() => {
                 setPerformSetPhase(false);
@@ -193,6 +246,7 @@ export default function WorkoutPlayer({
                   setQuickLog(true);
                 }
               }}
+              className="mt-8"
             >
               <Ionicons name={"play-forward"} size={100} color="white" />
             </TouchableOpacity>

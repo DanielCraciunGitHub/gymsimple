@@ -2,10 +2,12 @@ import { getItem, StorageKey } from "@/lib/local-storage";
 
 export const DEFAULT_WORKOUT_REMINDER_TIME = 30;
 export const DEFAULT_PREP_TIME = 30;
+export const AUTO_REST = false;
 
 export interface ISettings {
   workoutReminderTime: number;
   prepTime: number;
+  autoRest: boolean;
 }
 
 export async function getSettings(): Promise<ISettings> {
@@ -14,5 +16,6 @@ export async function getSettings(): Promise<ISettings> {
     workoutReminderTime:
       settings?.workoutReminderTime ?? DEFAULT_WORKOUT_REMINDER_TIME,
     prepTime: settings?.prepTime ?? DEFAULT_PREP_TIME,
+    autoRest: settings?.autoRest ?? AUTO_REST,
   };
 }
