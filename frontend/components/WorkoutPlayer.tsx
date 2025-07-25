@@ -211,7 +211,7 @@ export default function WorkoutPlayer({
         {!quickLog && (
           <ExerciseProgress
             totalSets={Number(currentExercise.targetSets)}
-            exerciseName={currentExercise.name}
+            totalReps={Number(currentExercise.targetReps)}
             exerciseWeight={currentExercise.weight}
           />
         )}
