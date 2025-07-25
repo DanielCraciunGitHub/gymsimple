@@ -53,7 +53,7 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
 
   const steps = [
     {
-      label: "Exercise Name",
+      label: "Name",
       placeholder: "Enter exercise name",
       keyboardType: "default" as const,
       field: "name" as keyof ExerciseDetails,
@@ -77,7 +77,7 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
       field: "targetReps" as keyof ExerciseDetails,
     },
     {
-      label: "Rest Time",
+      label: "Rest",
       placeholder: "Enter rest time in seconds",
       keyboardType: "numeric" as const,
       field: "targetRestTime" as keyof ExerciseDetails,
@@ -221,17 +221,42 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
     <View className="w-full flex-1 bg-white dark:bg-black">
       {/* Fixed Header with Progress Bar */}
       <View className="bg-white px-4 pb-2 pt-4 shadow-sm dark:bg-black">
-        <View className="mb-4">
-          <Text className="mb-2 text-center text-sm text-gray-600 dark:text-gray-400">
-            Step {currentStep + 1} of {steps.length}
-          </Text>
-          <View className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-            <View
-              className="h-2 rounded-full bg-blue-500"
-              style={{
-                width: `${((currentStep + 1) / steps.length) * 100}%`,
-              }}
-            />
+        <View className="mb-8 mt-4">
+          <View className="flex-row items-start justify-center">
+            {steps.map((step, index) => (
+              <React.Fragment key={index}>
+                <View className="items-center">
+                  <View
+                    className={`h-4 w-4 rounded-full border-2 ${
+                      index < currentStep
+                        ? "border-blue-500 bg-blue-500"
+                        : index === currentStep
+                          ? "border-blue-500 bg-white dark:bg-gray-800"
+                          : "border-gray-400 bg-transparent dark:border-gray-600"
+                    }`}
+                  />
+                  <Text
+                    className={`mt-2 w-16 text-center text-xs ${
+                      index === currentStep
+                        ? "font-bold text-blue-500"
+                        : "text-gray-500 dark:text-gray-400"
+                    }`}
+                  >
+                    {step.label}
+                  </Text>
+                </View>
+
+                {index < steps.length - 1 && (
+                  <View
+                    className={`mt-1.5 h-0.5 flex-1 ${
+                      index < currentStep
+                        ? "bg-blue-500"
+                        : "bg-gray-400 dark:bg-gray-600"
+                    }`}
+                  />
+                )}
+              </React.Fragment>
+            ))}
           </View>
         </View>
 

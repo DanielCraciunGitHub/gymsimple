@@ -42,7 +42,6 @@ export default function Workouts() {
 
     router.back();
   };
-  console.log(exercise);
 
   return (
     <View className="flex-1 items-center justify-center dark:bg-black dark:text-white">
