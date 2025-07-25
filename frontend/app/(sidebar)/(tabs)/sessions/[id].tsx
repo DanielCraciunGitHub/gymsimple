@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
 import {
+  ActivityIndicator,
   Alert,
   ScrollView,
   Text,
@@ -11,7 +12,7 @@ import {
   View,
 } from "react-native";
 
-import { formatDate, formatTime } from "@/lib/date";
+import { format12HourTime, formatDate } from "@/lib/date";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 
 export default function SessionDetails() {
@@ -196,9 +197,7 @@ export default function SessionDetails() {
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center bg-white dark:bg-black">
-        <Text className="text-lg text-gray-600 dark:text-gray-300">
-          Loading session details...
-        </Text>
+        <ActivityIndicator size="large" color="blue" />
       </View>
     );
   }
@@ -223,8 +222,8 @@ export default function SessionDetails() {
     );
   }
 
-  const sessionDate =
-    session.date instanceof Date ? session.date : new Date(session.date);
+  const startDate = new Date(session.date);
+  const endDate = new Date(session.endDate);
   const stats = getSessionStats();
   const insights = getPerformanceInsights();
 
@@ -247,15 +246,10 @@ export default function SessionDetails() {
         {/* Session Overview */}
         <View className="px-4 py-6">
           <Text className="text-2xl font-bold text-gray-800 dark:text-white">
-            {formatDate(sessionDate)}
+            {formatDate(startDate)}
           </Text>
           <Text className="mt-1 text-lg text-gray-600 dark:text-gray-300">
-            {formatTime(sessionDate)} -{" "}
-            {formatTime(
-              session.endDate instanceof Date
-                ? session.endDate
-                : new Date(session.endDate)
-            )}
+            {format12HourTime(startDate)} - {format12HourTime(endDate)}
           </Text>
         </View>
 
