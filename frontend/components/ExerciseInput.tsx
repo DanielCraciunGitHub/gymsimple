@@ -311,6 +311,9 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
         <View className="mb-6">
           <Text className="mb-4 text-center text-lg font-medium text-gray-700 dark:text-gray-300">
             {currentStepData.label}
+            {currentStepData.field !== "weight" && (
+              <Text className="text-red-500">*</Text>
+            )}
           </Text>
           <TextInput
             className={`h-14 w-full rounded-md border px-4 text-lg focus:border-blue-500 dark:bg-gray-800 dark:text-white ${

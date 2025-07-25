@@ -102,6 +102,16 @@ export default function MyExercises() {
     }
   };
 
+  const handleDeselectAll = async () => {
+    const updatedExercises = exercises.map((exercise) => ({
+      ...exercise,
+      selected: false,
+      selectionOrder: undefined,
+    }));
+    setExercises(updatedExercises);
+    await setItem(StorageKey.EXERCISES, updatedExercises);
+  };
+
   const filteredExercises = exercises.filter((exercise) =>
     exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -200,6 +210,18 @@ export default function MyExercises() {
           ) : null}
         </View>
         <View className="mt-4 flex-row justify-end gap-2">
+          {exercises.some((e) => e.selected) && (
+            <TouchableOpacity
+              className="flex-row items-center justify-center gap-2 rounded-lg bg-red-500 px-4 py-2"
+              onPress={handleDeselectAll}
+            >
+              <Ionicons
+                name="close-circle-outline"
+                size={20}
+                color="white"
+              />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
             onPress={async () => {
