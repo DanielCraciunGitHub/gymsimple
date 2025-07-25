@@ -93,9 +93,10 @@ export default function WorkoutSessions() {
 
   if (workoutSessions.length === 0) {
     return (
-      <View className="flex-1 items-center justify-center gap-4 bg-white dark:bg-black">
+      <View className="flex-1 items-center justify-center gap-4 bg-white px-6 dark:bg-black">
+        <Ionicons name="fitness-outline" size={64} color="#9CA3AF" />
         <Text className="text-xl font-bold text-gray-800 dark:text-white">
-          No Workout Sessions Yet
+          No Workout Sessions
         </Text>
         <Text className="mt-2 text-center text-gray-600 dark:text-gray-300">
           Complete your first workout to see your sessions here!

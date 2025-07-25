@@ -41,11 +41,11 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
       }`}
     >
       {/* Header with selection indicator and delete button */}
-      <View className="mb-3 flex-row items-center justify-between">
-        <TouchableOpacity
-          className="flex-row items-center"
-          onPress={() => onSelect(exercise)}
-        >
+      <TouchableOpacity
+        className="mb-3 flex-row items-center justify-between gap-2"
+        onPress={() => onSelect(exercise)}
+      >
+        <View className="flex-row items-center">
           <View
             className={`mr-3 h-4 w-4 rounded-full border-2 ${
               isSelected
@@ -63,11 +63,11 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
           {isSelected && exercise.selectionOrder && (
             <View className="ml-2 rounded-full bg-blue-500 px-2 py-1">
               <Text className="text-xs font-bold text-white">
-                #{exercise.selectionOrder}
+                {exercise.selectionOrder}
               </Text>
             </View>
           )}
-        </TouchableOpacity>
+        </View>
 
         <View className="flex-row gap-2">
           <Link href={`/exercises/add-exercise?id=${exercise.id}`} asChild>
@@ -82,7 +82,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
             <Ionicons name="trash-outline" size={16} color="white" />
           </TouchableOpacity>
         </View>
-      </View>
+      </TouchableOpacity>
 
       {/* Exercise Details */}
       <View className="gap-2">
