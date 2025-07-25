@@ -9,3 +9,5 @@ export const currentExerciseIndexAtom = atom(0);
 export const currentSetIndexAtom = atom(0);
 export const quickLogAtom = atom(false);
 export const exercisesDataAtom = atom<WorkoutSession>();
+
+export const davidGogginsModeAtom = atom(false);

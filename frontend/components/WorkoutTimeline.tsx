@@ -1,9 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { davidGogginsModeAtom } from "@/atoms/play";
 import { ExerciseDetails } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { Link } from "expo-router";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { Link, router } from "expo-router";
+import { useSetAtom } from "jotai";
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { getSettings, ISettings } from "@/config/settings";
 import { getItem, StorageKey } from "@/lib/local-storage";
@@ -217,6 +226,7 @@ const ExerciseTimeline: React.FC<ExerciseTimelineProps> = ({
 };
 
 export const WorkoutTimeline: React.FC = () => {
+  const setDavidGogginsMode = useSetAtom(davidGogginsModeAtom);
   const [selectedExercises, setSelectedExercises] = useState<
     ExerciseDetails[]
   >([]);
@@ -314,7 +324,7 @@ export const WorkoutTimeline: React.FC = () => {
   return (
     <View className="flex-1 bg-white dark:bg-black">
       <View className="px-6 pb-4 pt-6">
-        <View className="flex-row items-center justify-between">
+        <View className="flex-row items-center justify-between gap-2">
           <View className="flex-1">
             <Text className="text-2xl font-bold text-gray-800 dark:text-white">
               Today&apos;s Workout
@@ -323,6 +333,31 @@ export const WorkoutTimeline: React.FC = () => {
               Estimated duration: {calculateEstimatedDuration()}
             </Text>
           </View>
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert(
+                "David Goggins Mode",
+                "The workout will loop forever until you quit with minimal breaks and lots of reps. Are you sure you want to continue?",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                  {
+                    text: "Start",
+                    onPress: () => {
+                      setDavidGogginsMode(true);
+                      router.push("/play-goggins");
+                    },
+                  },
+                ]
+              );
+            }}
+          >
+            <View className="h-12 w-12 items-center justify-center rounded-full bg-red-500">
+              <Ionicons name="flame" size={24} color="#FFFFFF" />
+            </View>
+          </TouchableOpacity>
           <Link href="/play">
             <View className="h-12 w-12 items-center justify-center rounded-full bg-blue-500 shadow-lg">
               <Ionicons name="play" size={24} color="#FFFFFF" />

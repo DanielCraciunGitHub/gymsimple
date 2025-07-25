@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import {
+  davidGogginsModeAtom,
   isPausedAtom,
   performSetPhaseAtom,
   prepPhaseAtom,
@@ -14,7 +15,12 @@ export const usePlayBackground = () => {
   const restPhase = useAtomValue(restPhaseAtom);
   const isPaused = useAtomValue(isPausedAtom);
   const quickLog = useAtomValue(quickLogAtom);
+  const davidGogginsMode = useAtomValue(davidGogginsModeAtom);
   return useMemo(() => {
+    if (davidGogginsMode) {
+      return "bg-red-500";
+    }
+
     if (isPaused) {
       return "bg-red-500";
     }

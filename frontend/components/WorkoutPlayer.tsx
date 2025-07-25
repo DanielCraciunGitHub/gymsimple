@@ -22,7 +22,7 @@ import uuid from "react-native-uuid";
 
 import { ISettings } from "@/config/settings";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
-import { CountdownTimer } from "@/components/CountdownTimer";
+import { CountdownTimer, Stopwatch } from "@/components/CountdownTimer";
 import ExerciseProgress from "@/components/ExerciseProgress";
 
 import { StarRating } from "./StarRating";
@@ -53,7 +53,6 @@ export default function WorkoutPlayer({
   );
   const [restPhase, setRestPhase] = useAtom(restPhaseAtom);
   const [quickLog, setQuickLog] = useAtom(quickLogAtom);
-
   const [actualReps, setActualReps] = useState<string[]>([]);
   const [exerciseRating, setExerciseRating] = useState<number>(0);
   const [completedExercises, setCompletedExercises] = useState<
@@ -63,7 +62,6 @@ export default function WorkoutPlayer({
   const currentExercise = exercises[currentExerciseIndex];
   const [autoRestCountdown, setAutoRestCountdown] = useState<number>(-1);
 
-  // Initializes the workout session
   useEffect(() => {
     setPrepPhase(true);
     setPerformSetPhase(false);
@@ -358,5 +356,150 @@ export default function WorkoutPlayer({
         )}
       </SafeAreaView>
     )
+  );
+}
+
+export function GogginsWorkoutPlayer({
+  backgroundColor,
+  onQuit,
+}: {
+  backgroundColor: string;
+  onQuit: () => void;
+}) {
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const [, setCurrentSetIndex] = useState(0);
+  const [isResting, setIsResting] = useState(false);
+  const [isPreparing, setIsPreparing] = useState(true);
+  const [currentRound, setCurrentRound] = useState(1);
+
+  const gogginsExercises = [
+    { name: "Push-ups", reps: 100, restTime: 20 },
+    { name: "Burpees", reps: 100, restTime: 20 },
+    { name: "Mountain Climbers", reps: 100, restTime: 20 },
+    { name: "Jump Squats", reps: 100, restTime: 20 },
+    { name: "High Knees", reps: 100, restTime: 20 },
+    { name: "Plank Hold", reps: 300, restTime: 20 },
+    { name: "Flutter Kicks", reps: 100, restTime: 20 },
+    { name: "Jump Lunges", reps: 100, restTime: 20 },
+  ];
+
+  const currentExercise = gogginsExercises[currentExerciseIndex];
+
+  const handleCompleteSet = () => {
+    const nextExerciseIndex =
+      (currentExerciseIndex + 1) % gogginsExercises.length;
+
+    if (nextExerciseIndex === 0) {
+      setCurrentRound((prev) => prev + 1);
+    }
+
+    setCurrentExerciseIndex(nextExerciseIndex);
+    setCurrentSetIndex(0);
+    setIsResting(true);
+  };
+
+  const handleCompleteRest = () => {
+    setIsResting(false);
+  };
+
+  const handleCompletePrep = () => {
+    setIsPreparing(false);
+  };
+
+  return (
+    <SafeAreaView className={`flex-1 ${backgroundColor}`}>
+      {/* Header with round counter and bell */}
+      <View className="flex-row items-center justify-between px-6 py-4">
+        <View className="flex-1">
+          <Text className="text-2xl font-bold text-white">
+            Round {currentRound}
+          </Text>
+          <Text className="text-lg text-gray-300">GOGGINS MODE</Text>
+        </View>
+
+        {/* Large bell button to quit */}
+        <TouchableOpacity
+          onPress={onQuit}
+          className="items-center justify-center rounded-full bg-orange-600 p-4"
+        >
+          <Ionicons name="notifications" size={40} color="yellow" />
+        </TouchableOpacity>
+      </View>
+
+      <View className="items-center py-4">
+        <Text className="text-lg text-gray-300">Total Time</Text>
+        <Stopwatch />
+      </View>
+
+      <View className="flex-1 items-center justify-center px-6">
+        {isPreparing && (
+          <View className="items-center">
+            <Text className="mb-4 text-center text-xl text-white">
+              Get ready to push your limits
+            </Text>
+            <Text className="mb-8 text-center text-3xl font-bold text-white">
+              Who&apos;s gonna carry the boats?
+            </Text>
+            <CountdownTimer
+              durationSeconds={5}
+              onComplete={handleCompletePrep}
+              isPausable={false}
+            />
+          </View>
+        )}
+
+        {!isPreparing && isResting && (
+          <View className="items-center">
+            <Text className="mb-8 text-center text-lg text-white">
+              Next:{" "}
+              {
+                gogginsExercises[
+                  currentExerciseIndex % gogginsExercises.length || 0
+                ].name
+              }
+            </Text>
+            <CountdownTimer
+              durationSeconds={currentExercise.restTime}
+              onComplete={handleCompleteRest}
+              isPausable={false}
+            />
+          </View>
+        )}
+
+        {!isPreparing && !isResting && (
+          <View className="items-center">
+            <Text className="mb-2 text-center text-2xl text-gray-300">
+              {currentExercise.name}
+            </Text>
+            <Text className="mb-8 text-center text-8xl font-bold text-white">
+              {currentExercise.reps}
+            </Text>
+
+            {currentExercise.name === "Plank Hold" && (
+              <Text className="mb-4 text-center text-lg text-gray-300">
+                seconds
+              </Text>
+            )}
+
+            <TouchableOpacity
+              onPress={handleCompleteSet}
+              className="mt-8 items-center justify-center rounded-full bg-green-600 p-6"
+            >
+              <Ionicons name="checkmark" size={60} color="white" />
+            </TouchableOpacity>
+
+            <Text className="mt-8 text-center text-lg italic text-white">
+              &quot;Pain is weakness leaving the body&quot; — David Goggins
+            </Text>
+          </View>
+        )}
+      </View>
+
+      <View className="px-6 py-4">
+        <Text className="text-center text-sm font-bold text-white">
+          STAY HARD • NO EXCUSES • EMBRACE THE SUCK
+        </Text>
+      </View>
+    </SafeAreaView>
   );
 }
