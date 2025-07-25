@@ -13,10 +13,7 @@ import {
 } from "react-native";
 
 import { getSettings } from "@/config/settings";
-import {
-  cancelWeeklyNotification,
-  scheduleWeeklyNotification,
-} from "@/lib/local-notifications";
+import { scheduleWeeklyNotification } from "@/lib/local-notifications";
 
 export default function WeekCalendarItem({
   day,
@@ -57,11 +54,12 @@ export default function WeekCalendarItem({
       nextOccurrence.setMinutes(date.getMinutes());
       nextOccurrence.setSeconds(0);
 
-      await scheduleWeeklyNotification({
-        title: `Gym Time 🏋️`,
+      const id = await scheduleWeeklyNotification({
+        title: `G ym Time 🏋️`,
         message: `You have ${reminderTime} minutes to get to the gym!`,
         date: subMinutes(nextOccurrence, reminderTime),
       });
+      // TODO: handle saving notification id's
     }
   };
 
@@ -80,7 +78,7 @@ export default function WeekCalendarItem({
           text: "Remove",
           style: "destructive",
           onPress: async () => {
-            await cancelWeeklyNotification(index);
+            // TODO: handle removing notification's
             setSelectedTime(null);
           },
         },

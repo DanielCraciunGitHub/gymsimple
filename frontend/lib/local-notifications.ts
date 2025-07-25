@@ -51,8 +51,7 @@ export async function scheduleWeeklyNotification({
     sound: true,
   };
 
-  console.log("Scheduling notification for:", date);
-  const notification = await Notifications.scheduleNotificationAsync({
+  const id = await Notifications.scheduleNotificationAsync({
     content: notificationContent,
     trigger: {
       weekday: date.getDay() + 1,
@@ -62,20 +61,10 @@ export async function scheduleWeeklyNotification({
     },
   });
 
-  console.log("Notification scheduled:", notification);
+  console.log("Notification scheduled with id:", id);
+  return id;
 }
 
-export async function cancelWeeklyNotification(weekday: number) {
-  const scheduledNotifications =
-    await Notifications.getAllScheduledNotificationsAsync();
-
-  for (const notification of scheduledNotifications) {
-    const trigger = notification.trigger as { weekday: number };
-    if (trigger.weekday === weekday + 1) {
-      await Notifications.cancelScheduledNotificationAsync(
-        notification.identifier
-      );
-      console.log("Cancelled notification for weekday:", weekday);
-    }
-  }
+export async function cancelWeeklyNotification(identifier: string) {
+  await Notifications.cancelScheduledNotificationAsync(identifier);
 }
