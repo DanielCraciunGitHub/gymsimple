@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { davidGogginsModeAtom } from "@/atoms/play";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { useSetAtom } from "jotai";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,6 +11,7 @@ import { GogginsWorkoutPlayer } from "@/components/WorkoutPlayer";
 
 export default function PlayGoggins() {
   const [workoutStarted, setWorkoutStarted] = useState(false);
+  const setDavidGogginsMode = useSetAtom(davidGogginsModeAtom);
   const backgroundColor = usePlayBackground();
 
   const handleStartWorkout = () => {
@@ -29,6 +32,7 @@ export default function PlayGoggins() {
           style: "destructive",
           onPress: () => {
             setWorkoutStarted(false);
+            setDavidGogginsMode(false);
             router.back();
           },
         },
