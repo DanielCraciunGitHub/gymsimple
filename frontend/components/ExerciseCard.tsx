@@ -33,17 +33,19 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
   };
 
   return (
-    <TouchableOpacity
+    <View
       className={`mb-6 rounded-lg border-2 p-4 shadow-sm ${
         isSelected
           ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
           : "border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
       }`}
-      onPress={() => onSelect(exercise)}
     >
       {/* Header with selection indicator and delete button */}
       <View className="mb-3 flex-row items-center justify-between">
-        <View className="flex-row items-center">
+        <TouchableOpacity
+          className="flex-row items-center"
+          onPress={() => onSelect(exercise)}
+        >
           <View
             className={`mr-3 h-4 w-4 rounded-full border-2 ${
               isSelected
@@ -65,7 +67,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
               </Text>
             </View>
           )}
-        </View>
+        </TouchableOpacity>
 
         <View className="flex-row gap-2">
           <Link href={`/exercises/add-exercise?id=${exercise.id}`} asChild>
@@ -122,6 +124,6 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
           </Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
