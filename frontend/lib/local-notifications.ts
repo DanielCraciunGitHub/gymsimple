@@ -65,6 +65,20 @@ export async function scheduleWeeklyNotification({
   return id;
 }
 
-export async function cancelWeeklyNotification(identifier: string) {
-  await Notifications.cancelScheduledNotificationAsync(identifier);
+// Weekday should be 1-7, where 1 is Sunday and 7 is Saturday
+export async function clearNotificationsByWeekday(weekday: number) {
+  const notifications =
+    await Notifications.getAllScheduledNotificationsAsync();
+  for (const notification of notifications) {
+    const trigger = notification.trigger as { weekday: number };
+    if (trigger.weekday === weekday) {
+      await Notifications.cancelScheduledNotificationAsync(
+        notification.identifier
+      );
+      console.log(
+        "Cleared notification with id:",
+        notification.identifier
+      );
+    }
+  }
 }

@@ -13,7 +13,10 @@ import {
 } from "react-native";
 
 import { getSettings } from "@/config/settings";
-import { scheduleWeeklyNotification } from "@/lib/local-notifications";
+import {
+  clearNotificationsByWeekday,
+  scheduleWeeklyNotification,
+} from "@/lib/local-notifications";
 
 export default function WeekCalendarItem({
   day,
@@ -34,7 +37,7 @@ export default function WeekCalendarItem({
     loadReminderTime();
   }, []);
 
-  const handleTimeChange = async (
+  const handleSetReminder = async (
     event: DateTimePickerEvent,
     date?: Date
   ) => {
@@ -54,12 +57,11 @@ export default function WeekCalendarItem({
       nextOccurrence.setMinutes(date.getMinutes());
       nextOccurrence.setSeconds(0);
 
-      const id = await scheduleWeeklyNotification({
+      await scheduleWeeklyNotification({
         title: `G ym Time 🏋️`,
         message: `You have ${reminderTime} minutes to get to the gym!`,
         date: subMinutes(nextOccurrence, reminderTime),
       });
-      // TODO: handle saving notification id's
     }
   };
 
@@ -104,7 +106,14 @@ export default function WeekCalendarItem({
       style={index === 6 ? { borderBottomWidth: 0 } : undefined}
     >
       <TouchableOpacity
-        onPress={openTimePicker}
+        onPress={async () => {
+          if (selectedTime) {
+            setSelectedTime(null);
+            await clearNotificationsByWeekday(index + 1);
+          } else {
+            openTimePicker();
+          }
+        }}
         onLongPress={handleLongPress}
         className="flex-row items-center justify-between p-4"
       >
@@ -132,7 +141,7 @@ export default function WeekCalendarItem({
         <DateTimePicker
           value={selectedTime || new Date()}
           mode="time"
-          onChange={handleTimeChange}
+          onChange={handleSetReminder}
         />
       )}
     </View>
