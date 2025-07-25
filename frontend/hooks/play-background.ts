@@ -16,7 +16,7 @@ export const usePlayBackground = () => {
   const quickLog = useAtomValue(quickLogAtom);
   return useMemo(() => {
     if (isPaused) {
-      return "bg-gray-500";
+      return "bg-red-500";
     }
 
     if (prepPhase) {
