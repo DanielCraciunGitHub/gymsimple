@@ -58,7 +58,11 @@ export default function Play() {
           exerciseNames={exercises.map((exercise) => exercise.name)}
         />
       )}
-      <WorkoutPlayer exercises={exercises} settings={settings} />
+      <WorkoutPlayer
+        exercises={exercises}
+        settings={settings}
+        backgroundColor={backgroundColor}
+      />
     </SafeAreaView>
   );
 }

@@ -22,7 +22,6 @@ import uuid from "react-native-uuid";
 
 import { ISettings } from "@/config/settings";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
-import { usePlayBackground } from "@/hooks/play-background";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import ExerciseProgress from "@/components/ExerciseProgress";
 
@@ -31,9 +30,11 @@ import { StarRating } from "./StarRating";
 export default function WorkoutPlayer({
   exercises,
   settings,
+  backgroundColor,
 }: {
   exercises: ExerciseDetails[];
   settings: ISettings;
+  backgroundColor: string;
 }) {
   const [currentSetIndex, setCurrentSetIndex] = useAtom(
     currentSetIndexAtom
@@ -61,8 +62,6 @@ export default function WorkoutPlayer({
 
   const currentExercise = exercises[currentExerciseIndex];
   const [autoRestCountdown, setAutoRestCountdown] = useState<number>(-1);
-
-  const backgroundColor = usePlayBackground();
 
   // Initializes the workout session
   useEffect(() => {
