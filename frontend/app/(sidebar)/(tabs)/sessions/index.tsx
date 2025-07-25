@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 
-import { exportWorkoutSessions } from "@/lib/export";
+import { exportFile } from "@/lib/export";
 import { importWorkoutSessions } from "@/lib/import";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { WorkoutSessionCard } from "@/components/WorkoutSessionCard";
@@ -120,7 +120,7 @@ export default function WorkoutSessions() {
           <TouchableOpacity
             className="rounded-lg bg-blue-500 px-4 py-2"
             onPress={async () => {
-              await exportWorkoutSessions(workoutSessions);
+              await exportFile("workout-sessions.json", workoutSessions);
             }}
           >
             <Ionicons

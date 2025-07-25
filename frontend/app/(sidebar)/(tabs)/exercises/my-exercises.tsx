@@ -13,7 +13,7 @@ import {
   View,
 } from "react-native";
 
-import { exportExercises } from "@/lib/export";
+import { exportFile } from "@/lib/export";
 import { importExercises } from "@/lib/import";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { ExerciseCard } from "@/components/ExerciseCard";
@@ -176,7 +176,7 @@ export default function MyExercises() {
           <TouchableOpacity
             className="flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
             onPress={async () => {
-              await exportExercises(exercises);
+              await exportFile("exercises.json", exercises);
             }}
           >
             <Ionicons
