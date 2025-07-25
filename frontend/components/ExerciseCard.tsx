@@ -45,7 +45,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
         className="mb-3 flex-row items-center justify-between gap-2"
         onPress={() => onSelect(exercise)}
       >
-        <View className="flex-row items-center">
+        <View className="flex-1 flex-row items-center">
           <View
             className={`mr-3 h-6 w-6 rounded-full border-2 ${
               isSelected
@@ -57,16 +57,9 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
               <View className="h-full w-full rounded-full bg-white" />
             )}
           </View>
-          <Text className="text-base font-semibold text-gray-800 dark:text-white">
+          <Text className="flex-1 text-base font-semibold text-gray-800 dark:text-white">
             {exercise.name}
           </Text>
-          {isSelected && exercise.selectionOrder && (
-            <View className="ml-2 rounded-full bg-blue-500 px-2 py-1">
-              <Text className="text-xs font-bold text-white">
-                {exercise.selectionOrder}
-              </Text>
-            </View>
-          )}
         </View>
 
         <View className="flex-row gap-2">
