@@ -12,6 +12,7 @@ import {
   Pressable,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -24,6 +25,7 @@ import { ExerciseCard } from "@/components/ExerciseCard";
 export default function MyExercises() {
   const [exercises, setExercises] = useState<ExerciseDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const loadExercises = async () => {
     try {
@@ -99,6 +101,10 @@ export default function MyExercises() {
       Alert.alert("Error", "Failed to delete exercise");
     }
   };
+
+  const filteredExercises = exercises.filter((exercise) =>
+    exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleImport = async () => {
     try {
@@ -177,6 +183,22 @@ export default function MyExercises() {
             </TouchableOpacity>
           </Link>
         </View>
+        <View className="relative mt-4">
+          <TextInput
+            placeholder="Search exercises..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-gray-800 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+          />
+          {searchQuery ? (
+            <TouchableOpacity
+              onPress={() => setSearchQuery("")}
+              className="absolute right-3 top-2.5"
+            >
+              <Ionicons name="close-circle" size={20} color="gray" />
+            </TouchableOpacity>
+          ) : null}
+        </View>
         <View className="mt-4 flex-row justify-end gap-2">
           <TouchableOpacity
             className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
@@ -203,8 +225,11 @@ export default function MyExercises() {
         </View>
       </View>
 
-      <ScrollView className="flex-1 px-4 py-4">
-        {exercises.map((exercise) => (
+      <ScrollView
+        className="flex-1 px-4 py-4"
+        keyboardShouldPersistTaps="always"
+      >
+        {filteredExercises.map((exercise) => (
           <ExerciseCard
             key={exercise.id}
             exercise={exercise}
