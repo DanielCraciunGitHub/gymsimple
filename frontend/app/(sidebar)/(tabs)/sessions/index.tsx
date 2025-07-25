@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { WorkoutSession } from "@/validations";
+import { WorkoutSession, workoutSessionArraySchema } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { router } from "expo-router";
@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import { exportFile } from "@/lib/export";
-import { importWorkoutSessions } from "@/lib/import";
+import { importFile } from "@/lib/import";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { WorkoutSessionCard } from "@/components/WorkoutSessionCard";
 
@@ -57,7 +57,9 @@ export default function WorkoutSessions() {
 
   const handleImport = async () => {
     try {
-      const importedSessions = await importWorkoutSessions();
+      const importedSessions = await importFile<WorkoutSession[]>(
+        workoutSessionArraySchema
+      );
       if (importedSessions) {
         const newSessions = [...importedSessions, ...workoutSessions];
         const uniqueSessions = newSessions
