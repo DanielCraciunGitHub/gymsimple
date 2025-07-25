@@ -21,6 +21,7 @@ import { exportFile } from "@/lib/export";
 import { importFile } from "@/lib/import";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { ExerciseCard } from "@/components/ExerciseCard";
+import { sortBySelectionOrder } from "@/components/ExerciseInput";
 
 export default function MyExercises() {
   const [exercises, setExercises] = useState<ExerciseDetails[]>([]);
@@ -180,6 +181,10 @@ export default function MyExercises() {
     );
   }
 
+  const selectedExercises = sortBySelectionOrder(
+    exercises.filter((e) => e.selected)
+  );
+
   return (
     <View className="flex-1 bg-white dark:bg-black">
       <View className="px-4 py-4">
@@ -210,18 +215,6 @@ export default function MyExercises() {
           ) : null}
         </View>
         <View className="mt-4 flex-row justify-end gap-2">
-          {exercises.some((e) => e.selected) && (
-            <TouchableOpacity
-              className="flex-row items-center justify-center gap-2 rounded-lg bg-red-500 px-4 py-2"
-              onPress={handleDeselectAll}
-            >
-              <Ionicons
-                name="close-circle-outline"
-                size={20}
-                color="white"
-              />
-            </TouchableOpacity>
-          )}
           <TouchableOpacity
             className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
             onPress={async () => {
@@ -250,6 +243,7 @@ export default function MyExercises() {
       <ScrollView
         className="flex-1 px-4 py-4"
         keyboardShouldPersistTaps="always"
+        contentContainerStyle={{ paddingBottom: 180 }}
       >
         {filteredExercises.map((exercise) => (
           <ExerciseCard
@@ -261,6 +255,49 @@ export default function MyExercises() {
           />
         ))}
       </ScrollView>
+      {selectedExercises.length > 0 && (
+        <View className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+          <View className="mb-2 flex-row items-center justify-between">
+            <Text className="text-lg font-bold text-gray-800 dark:text-white">
+              Workout Plan
+            </Text>
+            <TouchableOpacity onPress={handleDeselectAll}>
+              <Ionicons
+                name="close-circle-outline"
+                size={24}
+                color="gray"
+              />
+            </TouchableOpacity>
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="py-2"
+          >
+            {selectedExercises.map((exercise, index) => (
+              <View
+                key={exercise.id}
+                className="mr-4 flex-row items-center gap-2 rounded-full bg-gray-100 p-2 dark:bg-gray-700"
+              >
+                <View className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500">
+                  <Text className="font-bold text-white">{index + 1}</Text>
+                </View>
+                <Text className="font-medium text-gray-800 dark:text-gray-200">
+                  {exercise.name}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+          <Link href="/(sidebar)/(tabs)" asChild>
+            <TouchableOpacity className="mt-4 flex-row items-center justify-center gap-2 rounded-lg bg-green-500 py-3">
+              <Ionicons name="play" size={20} color="white" />
+              <Text className="text-center font-bold text-white">
+                Confirm
+              </Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+      )}
     </View>
   );
 }
