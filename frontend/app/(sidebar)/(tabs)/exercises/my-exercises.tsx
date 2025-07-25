@@ -264,7 +264,7 @@ export default function MyExercises() {
             <TouchableOpacity onPress={handleDeselectAll}>
               <Ionicons
                 name="close-circle-outline"
-                size={24}
+                size={28}
                 color="gray"
               />
             </TouchableOpacity>

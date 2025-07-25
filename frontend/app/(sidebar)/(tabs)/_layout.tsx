@@ -41,8 +41,12 @@ export default function Layout() {
         name="index"
         options={{
           title: "Play",
-          tabBarIcon: ({ size }) => (
-            <Ionicons name="play" size={size} color={"blue"} />
+          tabBarIcon: ({ size, focused }) => (
+            <Ionicons
+              name="play"
+              size={size}
+              color={focused ? "green" : "gray"}
+            />
           ),
         }}
       />

@@ -47,7 +47,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
       >
         <View className="flex-row items-center">
           <View
-            className={`mr-3 h-4 w-4 rounded-full border-2 ${
+            className={`mr-3 h-6 w-6 rounded-full border-2 ${
               isSelected
                 ? "border-blue-500 bg-blue-500"
                 : "border-gray-300 dark:border-gray-600"
