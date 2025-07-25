@@ -18,12 +18,16 @@ import {
   scheduleWeeklyNotification,
 } from "@/lib/local-notifications";
 
+import { ActiveReminder } from "./WeekCalendar";
+
 export default function WeekCalendarItem({
   day,
   index,
+  activeReminders,
 }: {
   day: string;
   index: number;
+  activeReminders: ActiveReminder[];
 }) {
   const [showPicker, setShowPicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
@@ -36,6 +40,24 @@ export default function WeekCalendarItem({
     };
     loadReminderTime();
   }, []);
+
+  useEffect(() => {
+    const reminder = activeReminders.find(
+      (reminder) =>
+        reminder.trigger && reminder.trigger.weekday === index + 1
+    );
+    if (reminder) {
+      setSelectedTime(
+        new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate(),
+          reminder.trigger.hour,
+          reminder.trigger.minute
+        )
+      );
+    }
+  }, [activeReminders, index]);
 
   const handleSetReminder = async (
     event: DateTimePickerEvent,
