@@ -29,20 +29,20 @@ export default function Layout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="exercises"
         options={{
-          title: "Timeline",
+          title: "Exercises",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="time-outline" size={size} color={color} />
+            <Ionicons name="barbell-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="exercises"
+        name="index"
         options={{
-          title: "My Exercises",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="barbell-outline" size={size} color={color} />
+          title: "Play",
+          tabBarIcon: ({ size }) => (
+            <Ionicons name="play" size={size} color={"blue"} />
           ),
         }}
       />

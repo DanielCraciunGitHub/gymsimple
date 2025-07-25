@@ -169,7 +169,7 @@ export default function MyExercises() {
       <View className="px-4 py-4">
         <View className="flex-row items-center justify-between">
           <Text className="text-2xl font-bold text-gray-800 dark:text-white">
-            My Exercises
+            Select Exercise Order
           </Text>
           <Link href="/exercises/add-exercise" asChild>
             <TouchableOpacity className="items-center justify-center rounded-full bg-blue-500 p-2">
@@ -177,9 +177,9 @@ export default function MyExercises() {
             </TouchableOpacity>
           </Link>
         </View>
-        <View className="mt-4 flex-row gap-2">
+        <View className="mt-4 flex-row justify-end gap-2">
           <TouchableOpacity
-            className="flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
+            className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
             onPress={async () => {
               await exportFile("exercises.json", exercises);
             }}
@@ -189,10 +189,9 @@ export default function MyExercises() {
               size={20}
               color="white"
             />
-            <Text className="text-white">Export Exercises</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className="flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
+            className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
             onPress={handleImport}
           >
             <Ionicons
@@ -200,7 +199,6 @@ export default function MyExercises() {
               size={20}
               color="white"
             />
-            <Text className="text-white">Import Exercises</Text>
           </TouchableOpacity>
         </View>
       </View>
