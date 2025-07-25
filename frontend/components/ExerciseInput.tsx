@@ -132,8 +132,8 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
           return false;
         }
         const restTime = parseInt(details.targetRestTime);
-        if (restTime < 30) {
-          setError("Rest time must be greater than 30 seconds");
+        if (restTime < 10) {
+          setError("Rest time must be at least 10 seconds");
           return false;
         }
         break;

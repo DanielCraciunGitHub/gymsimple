@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { isPausedAtom } from "@/atoms/play";
 import { Ionicons } from "@expo/vector-icons";
 import { useAtom } from "jotai";
@@ -17,22 +17,35 @@ export const CountdownTimer = ({
 }: CountdownTimerProps) => {
   const [timeLeft, setTimeLeft] = useState(durationSeconds);
   const [isPaused, setIsPaused] = useAtom(isPausedAtom);
+  const onCompleteRef = useRef(onComplete);
 
+  // Update the ref whenever onComplete changes
   useEffect(() => {
-    if (!isPaused) {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  // Reset timer when duration changes
+  useEffect(() => {
+    setTimeLeft(durationSeconds);
+  }, [durationSeconds]);
+
+  // Handle completion when timeLeft reaches 0
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      onCompleteRef.current();
+    }
+  }, [timeLeft]);
+
+  // Timer interval
+  useEffect(() => {
+    if (!isPaused && timeLeft > 0) {
       const interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            onComplete();
-            return 0;
-          }
-          return prev - 1;
-        });
+        setTimeLeft((prev) => Math.max(0, prev - 1));
       }, 1000);
 
       return () => clearInterval(interval);
     }
-  }, [timeLeft, isPaused, onComplete]);
+  }, [timeLeft, isPaused]);
 
   return (
     <View className="items-center justify-center">
@@ -51,7 +64,6 @@ export const CountdownTimer = ({
           onPress={() => {
             setTimeLeft(0);
             setIsPaused(false);
-            onComplete();
           }}
         >
           <Ionicons
