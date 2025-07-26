@@ -98,41 +98,6 @@ export const WorkoutSessionCard: React.FC<WorkoutSessionCardProps> = ({
           </Text>
         </View>
       </View>
-
-      {/* Exercise List */}
-      <View className="gap-2">
-        {session.exercises.map((exercise) => (
-          <View
-            key={exercise.id}
-            className="rounded-md bg-gray-50 p-3 dark:bg-gray-700"
-          >
-            <View className="mb-1 flex-row items-center justify-between">
-              <Text className="flex-1 font-medium text-gray-800 dark:text-white">
-                {exercise.name}
-              </Text>
-              <View className="flex-row items-center">
-                <Text className="mr-2 text-sm text-gray-600 dark:text-gray-300">
-                  {exercise.rating}/5
-                </Text>
-                <Ionicons name="star" size={14} color="#FCD34D" />
-              </View>
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-sm text-gray-600 dark:text-gray-300">
-                {exercise.set.length} sets •{" "}
-                {exercise.set.reduce(
-                  (total, set) => total + set.actualReps,
-                  0
-                )}{" "}
-                total reps
-              </Text>
-              <Text className="text-sm text-gray-600 dark:text-gray-300">
-                {exercise.restTime}s rest
-              </Text>
-            </View>
-          </View>
-        ))}
-      </View>
     </TouchableOpacity>
   );
 };
