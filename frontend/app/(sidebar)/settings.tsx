@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
   AUTO_REST,
   DEFAULT_PREP_TIME,
+  DEFAULT_SKIP_LOG,
   DEFAULT_WORKOUT_REMINDER_TIME,
   getSettings,
   ISettings,
@@ -17,6 +18,7 @@ export default function Settings() {
     workoutReminderTime: DEFAULT_WORKOUT_REMINDER_TIME,
     prepTime: DEFAULT_PREP_TIME,
     autoRest: AUTO_REST,
+    skipLog: DEFAULT_SKIP_LOG,
   });
 
   useEffect(() => {
@@ -54,6 +56,15 @@ export default function Settings() {
       autoRest,
     };
     console.log("newSettings", newSettings);
+    await setItem(StorageKey.SETTINGS, newSettings);
+    setSettings(newSettings);
+  };
+
+  const updateSkipLog = async (skipLog: boolean) => {
+    const newSettings = {
+      ...settings,
+      skipLog,
+    };
     await setItem(StorageKey.SETTINGS, newSettings);
     setSettings(newSettings);
   };
@@ -187,6 +198,47 @@ export default function Settings() {
                   }`}
                 >
                   {autoRest ? "Yes" : "No"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+      <View className="rounded-lg bg-gray-100 p-4 dark:bg-gray-900">
+        <Text className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          Skip Log
+        </Text>
+        <Text className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+          Should we skip the log screen when you complete an exercise?
+        </Text>
+
+        <View className="flex-row items-center justify-between gap-2">
+          {[true, false].map((skipLog) => (
+            <TouchableOpacity
+              key={skipLog.toString()}
+              onPress={() => updateSkipLog(skipLog)}
+              className={`flex-1 items-center rounded-md p-3 ${
+                settings.skipLog === skipLog
+                  ? "bg-blue-500"
+                  : "bg-gray-200 dark:bg-gray-800"
+              }`}
+            >
+              <View className="flex-row items-center gap-1">
+                <Ionicons
+                  name="checkmark-circle-outline"
+                  size={16}
+                  color={
+                    settings.skipLog === skipLog ? "#FFFFFF" : "#6B7280"
+                  }
+                />
+                <Text
+                  className={`text-sm font-medium ${
+                    settings.skipLog === skipLog
+                      ? "text-white"
+                      : "text-gray-600 dark:text-gray-400"
+                  }`}
+                >
+                  {skipLog ? "Yes" : "No"}
                 </Text>
               </View>
             </TouchableOpacity>

@@ -55,34 +55,34 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
     {
       label: "Name",
       placeholder: "Enter exercise name",
-      keyboardType: "default" as const,
-      field: "name" as keyof ExerciseDetails,
+      keyboardType: "default",
+      field: "name",
     },
     {
       label: "Weight",
       placeholder: "Enter weight",
-      keyboardType: "numeric" as const,
-      field: "weight" as keyof ExerciseDetails,
+      keyboardType: "numeric",
+      field: "weight",
     },
     {
       label: "Sets",
       placeholder: "Enter number of sets",
-      keyboardType: "numeric" as const,
-      field: "targetSets" as keyof ExerciseDetails,
+      keyboardType: "numeric",
+      field: "targetSets",
     },
     {
-      label: "Reps",
-      placeholder: "Enter number of reps",
-      keyboardType: "numeric" as const,
-      field: "targetReps" as keyof ExerciseDetails,
+      label: "Reps/Time",
+      placeholder: "1 Rep = 3 Seconds of Exercise Time",
+      keyboardType: "numeric",
+      field: "targetReps",
     },
     {
       label: "Rest",
       placeholder: "Enter rest time in seconds",
-      keyboardType: "numeric" as const,
-      field: "targetRestTime" as keyof ExerciseDetails,
+      keyboardType: "numeric",
+      field: "targetRestTime",
     },
-  ];
+  ] as const;
 
   const validateCurrentStep = (): boolean => {
     const field = steps[currentStep].field;
@@ -106,12 +106,12 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
         break;
       case "targetSets":
         if (!isWholeNumber(details.targetSets)) {
-          setError("Sets must be a whole number and less than 6");
+          setError("Sets must be a whole number and less than 10");
           return false;
         }
         const sets = parseInt(details.targetSets);
-        if (sets < 1 || sets > 6) {
-          setError("Sets must be between 1 and 6");
+        if (sets < 1 || sets > 10) {
+          setError("Sets must be between 1 and 10");
           return false;
         }
         break;
@@ -132,8 +132,8 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
           return false;
         }
         const restTime = parseInt(details.targetRestTime);
-        if (restTime < 10) {
-          setError("Rest time must be at least 10 seconds");
+        if (restTime < 5) {
+          setError("Rest time must be at least 5 seconds");
           return false;
         }
         break;

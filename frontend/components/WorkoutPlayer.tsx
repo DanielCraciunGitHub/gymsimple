@@ -113,7 +113,7 @@ export default function WorkoutPlayer({
               if (currentSet < totalSets - 1) {
                 setRestPhase(true);
               } else {
-                setQuickLog(true);
+                handleExerciseComplete();
               }
             }, 0);
             return 0;
@@ -199,6 +199,24 @@ export default function WorkoutPlayer({
     }
   };
 
+  const handleExerciseComplete = () => {
+    if (settings.skipLog) {
+      if (currentExerciseIndex < exercises.length - 1) {
+        setCurrentExerciseIndex(currentExerciseIndex + 1);
+        setCurrentSetIndex(0);
+        setPrepPhase(true);
+        setRestPhase(false);
+        setPerformSetPhase(false);
+        setActualReps([]);
+        setExerciseRating(0);
+      } else {
+        router.push("/(sidebar)/(tabs)/sessions");
+      }
+    } else {  
+      setQuickLog(true);
+    }
+  };
+
   const isReadyToProgress =
     actualReps.every((reps) => reps && Number(reps) >= 0) &&
     exerciseRating > 0;
@@ -255,7 +273,7 @@ export default function WorkoutPlayer({
                 ) {
                   setRestPhase(true);
                 } else {
-                  setQuickLog(true);
+                  handleExerciseComplete();
                 }
               }}
               className="mt-8"

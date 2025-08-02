@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
   AUTO_REST,
   DEFAULT_PREP_TIME,
+  DEFAULT_SKIP_LOG,
   DEFAULT_WORKOUT_REMINDER_TIME,
   getSettings,
   ISettings,
@@ -22,6 +23,7 @@ export default function Play() {
     workoutReminderTime: DEFAULT_WORKOUT_REMINDER_TIME,
     prepTime: DEFAULT_PREP_TIME,
     autoRest: AUTO_REST,
+    skipLog: DEFAULT_SKIP_LOG,
   });
 
   useEffect(() => {

@@ -190,7 +190,7 @@ export default function MyExercises() {
       <View className="px-4 py-4">
         <View className="flex-row items-center justify-between">
           <Text className="text-2xl font-bold text-gray-800 dark:text-white">
-            Select Exercise Order
+            Select Exercises
           </Text>
           <Link href="/exercises/add-exercise" asChild>
             <TouchableOpacity className="items-center justify-center rounded-full bg-blue-500 p-2">
