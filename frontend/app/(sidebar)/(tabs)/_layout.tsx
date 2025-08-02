@@ -7,6 +7,7 @@ export default function Layout() {
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
         headerTitle: "",
         tabBarStyle: {
