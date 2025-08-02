@@ -7,7 +7,6 @@ import { Link, router } from "expo-router";
 import { useSetAtom } from "jotai";
 import {
   ActivityIndicator,
-  Alert,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -335,23 +334,8 @@ export const WorkoutTimeline: React.FC = () => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              Alert.alert(
-                "David Goggins Mode",
-                "The workout will loop forever until you quit with minimal breaks and lots of reps. Are you sure you want to continue?",
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Start",
-                    onPress: () => {
-                      setDavidGogginsMode(true);
-                      router.push("/play-goggins");
-                    },
-                  },
-                ]
-              );
+              setDavidGogginsMode(true);
+              router.push("/play-goggins");
             }}
           >
             <View className="h-12 w-12 items-center justify-center rounded-full bg-red-500">
