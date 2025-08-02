@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ExerciseDetails } from "@/validations";
 import {
   Pressable,
@@ -10,6 +10,7 @@ import {
 import uuid from "react-native-uuid";
 
 import { isValidNumber, isWholeNumber } from "@/lib/num";
+import { getTags, addTag } from "@/lib/local-storage";
 
 export const sortBySelectionOrder = (
   exercises: ExerciseDetails[]
@@ -41,6 +42,7 @@ const defaultValues: ExerciseDetails = {
   },
   selected: false,
   selectionOrder: undefined,
+  tags: [],
 };
 
 export const ExerciseInput: React.FC<ExerciseInputProps> = ({
@@ -50,6 +52,16 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
   const [details, setDetails] = useState<ExerciseDetails>(initialValues);
   const [currentStep, setCurrentStep] = useState(0);
   const [error, setError] = useState<string>("");
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [newTag, setNewTag] = useState<string>("");
+
+  useEffect(() => {
+    const loadTags = async () => {
+      const tags = await getTags();
+      setAvailableTags(tags);
+    };
+    loadTags();
+  }, []);
 
   const steps = [
     {
@@ -81,6 +93,12 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
       placeholder: "Enter rest time in seconds",
       keyboardType: "numeric",
       field: "targetRestTime",
+    },
+    {
+      label: "Tags",
+      placeholder: "Add tags",
+      keyboardType: "default",
+      field: "tags",
     },
   ] as const;
 
@@ -137,6 +155,9 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
           return false;
         }
         break;
+      case "tags":
+        // Tags are optional, so no validation needed
+        break;
     }
 
     return true;
@@ -182,6 +203,11 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
       "targetRestTime",
     ] as (keyof ExerciseDetails)[];
 
+    if (field === "tags") {
+      setNewTag(text);
+      return;
+    }
+
     if (numericFields.includes(field)) {
       let sanitizedText: string;
 
@@ -211,10 +237,39 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
     }
   };
 
+  const handleAddNewTag = async () => {
+    if (newTag.trim() && !details.tags?.includes(newTag.trim())) {
+      const trimmedTag = newTag.trim();
+      await addTag(trimmedTag);
+      setDetails({
+        ...details,
+        tags: [...(details.tags || []), trimmedTag],
+      });
+      setAvailableTags(prev => prev.includes(trimmedTag) ? prev : [...prev, trimmedTag].sort());
+      setNewTag("");
+    }
+  };
+
+  const handleToggleTag = (tag: string) => {
+    if (details.tags && details.tags.includes(tag)) {
+      setDetails({
+        ...details,
+        tags: details.tags.filter(t => t !== tag),
+      });
+    } else {
+      setDetails({
+        ...details,
+        tags: [...(details.tags || []), tag],
+      });
+    }
+  };
+
   const currentStepData = steps[currentStep];
   const currentValue =
     currentStepData.field === "weight"
       ? details.weight.value
+      : currentStepData.field === "tags"
+      ? newTag
       : (details[currentStepData.field] as string);
 
   return (
@@ -225,7 +280,11 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
           <View className="flex-row items-start justify-center">
             {steps.map((step, index) => (
               <React.Fragment key={index}>
-                <View className="items-center">
+                <TouchableOpacity 
+                  className="items-center"
+                  onPress={() => setCurrentStep(index)}
+                  activeOpacity={0.7}
+                >
                   <View
                     className={`h-4 w-4 rounded-full border-2 ${
                       index < currentStep
@@ -244,7 +303,7 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
                   >
                     {step.label}
                   </Text>
-                </View>
+                </TouchableOpacity>
 
                 {index < steps.length - 1 && (
                   <View
@@ -311,7 +370,7 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
         <View className="mb-6">
           <Text className="mb-4 text-center text-lg font-medium text-gray-700 dark:text-gray-300">
             {currentStepData.label}
-            {currentStepData.field !== "weight" && (
+            {currentStepData.field !== "weight" && currentStepData.field !== "tags" && (
               <Text className="text-red-500">*</Text>
             )}
           </Text>
@@ -390,6 +449,66 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
                   lbs
                 </Text>
               </Pressable>
+            </View>
+          )}
+          {currentStepData.field === "tags" && (
+            <View className="mt-4">
+              {/* Add New Tag */}
+              <View className="flex-row items-center gap-2">
+                
+                <TouchableOpacity
+                  onPress={handleAddNewTag}
+                  className="rounded-md bg-green-500 px-4 py-2"
+                  disabled={!newTag.trim()}
+                >
+                  <Text className="text-xs font-medium text-white">Add</Text>
+                </TouchableOpacity>
+              </View>
+              {/* Selected Tags */}
+              {details.tags && details.tags.length > 0 && (
+                <View className="mb-4">
+                  <Text className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Selected Tags:
+                  </Text>
+                  <View className="flex-row flex-wrap gap-2">
+                    {details.tags.map((tag, index) => (
+                      <Pressable
+                        key={index}
+                        onPress={() => handleToggleTag(tag)}
+                        className="rounded-full bg-blue-500 px-3 py-1"
+                      >
+                        <Text className="text-xs font-medium text-white">
+                          {tag} ✕
+                        </Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                </View>
+              )}
+              
+              {/* Available Tags */}
+              {availableTags.filter(tag => !details.tags?.includes(tag)).length > 0 && (
+                <View className="mb-4">
+                  <Text className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Available Tags:
+                  </Text>
+                  <View className="flex-row flex-wrap gap-2">
+                    {availableTags
+                      .filter(tag => !details.tags?.includes(tag))
+                      .map((tag, index) => (
+                        <Pressable
+                          key={index}
+                          onPress={() => handleToggleTag(tag)}
+                          className="rounded-full bg-gray-200 px-3 py-1 dark:bg-gray-700"
+                        >
+                          <Text className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                            {tag}
+                          </Text>
+                        </Pressable>
+                      ))}
+                  </View>
+                </View>
+              )}
             </View>
           )}
         </View>

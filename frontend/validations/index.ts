@@ -12,6 +12,7 @@ export const exerciseDetailsSchema = z.object({
   }),
   selected: z.boolean(),
   selectionOrder: z.number().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export const exerciseDataSchema = z.object({

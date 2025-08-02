@@ -5,6 +5,7 @@ export enum StorageKey {
   SETTINGS = "@settings",
   EXERCISES = "@exercises",
   WORKOUT_SESSIONS = "@workout-sessions",
+  TAGS = "@tags",
 }
 
 export async function setItem<T>(
@@ -63,6 +64,43 @@ export async function hasKey(key: StorageKey): Promise<boolean> {
     return value != null;
   } catch (error) {
     console.error("Error checking key existence:", error);
+    throw error;
+  }
+}
+
+// Tag management functions
+export async function getTags(): Promise<string[]> {
+  try {
+    const tags = await getItem<string[]>(StorageKey.TAGS);
+    return tags || [];
+  } catch (error) {
+    console.error("Error getting tags:", error);
+    return [];
+  }
+}
+
+export async function addTag(tag: string): Promise<void> {
+  try {
+    const existingTags = await getTags();
+    const trimmedTag = tag.trim();
+    
+    if (trimmedTag && !existingTags.includes(trimmedTag)) {
+      const updatedTags = [...existingTags, trimmedTag].sort();
+      await setItem(StorageKey.TAGS, updatedTags);
+    }
+  } catch (error) {
+    console.error("Error adding tag:", error);
+    throw error;
+  }
+}
+
+export async function removeTag(tag: string): Promise<void> {
+  try {
+    const existingTags = await getTags();
+    const updatedTags = existingTags.filter(t => t !== tag);
+    await setItem(StorageKey.TAGS, updatedTags);
+  } catch (error) {
+    console.error("Error removing tag:", error);
     throw error;
   }
 }

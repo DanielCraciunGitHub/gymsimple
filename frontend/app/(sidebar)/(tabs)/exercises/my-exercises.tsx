@@ -19,7 +19,7 @@ import {
 
 import { exportFile } from "@/lib/export";
 import { importFile } from "@/lib/import";
-import { getItem, setItem, StorageKey } from "@/lib/local-storage";
+import { getItem, setItem, StorageKey, getTags } from "@/lib/local-storage";
 import { ExerciseCard } from "@/components/ExerciseCard";
 import { sortBySelectionOrder } from "@/components/ExerciseInput";
 
@@ -27,6 +27,9 @@ export default function MyExercises() {
   const [exercises, setExercises] = useState<ExerciseDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [showTagsDropdown, setShowTagsDropdown] = useState(false);
 
   const loadExercises = async () => {
     try {
@@ -35,6 +38,10 @@ export default function MyExercises() {
         StorageKey.EXERCISES
       );
       setExercises(storedExercises || []);
+
+      // Load available tags
+      const tags = await getTags();
+      setAvailableTags(tags);
     } catch (error) {
       console.error("Error loading exercises:", error);
       Alert.alert("Error", "Failed to load exercises");
@@ -113,9 +120,20 @@ export default function MyExercises() {
     await setItem(StorageKey.EXERCISES, updatedExercises);
   };
 
-  const filteredExercises = exercises.filter((exercise) =>
-    exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredExercises = exercises.filter((exercise) => {
+    const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTags = selectedTags.length === 0 ||
+      selectedTags.some(tag => exercise.tags?.includes(tag));
+    return matchesSearch && matchesTags;
+  });
+
+  const handleToggleTag = (tag: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tag)
+        ? prev.filter(t => t !== tag)
+        : [...prev, tag]
+    );
+  };
 
   const handleImport = async () => {
     try {
@@ -187,6 +205,15 @@ export default function MyExercises() {
 
   return (
     <View className="flex-1 bg-white dark:bg-black">
+      {/* Overlay to close dropdown */}
+      {showTagsDropdown && (
+        <TouchableOpacity
+          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 5 }}
+          onPress={() => setShowTagsDropdown(false)}
+          activeOpacity={1}
+        />
+      )}
+      
       <View className="px-4 py-4">
         <View className="flex-row items-center justify-between">
           <Text className="text-2xl font-bold text-gray-800 dark:text-white">
@@ -199,21 +226,109 @@ export default function MyExercises() {
           </Link>
         </View>
         <View className="relative mt-4">
-          <TextInput
-            placeholder="Search exercises..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-gray-800 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-          />
-          {searchQuery ? (
+          <View className="flex-row items-center gap-2">
+            <View className="flex-1 relative">
+              <TextInput
+                placeholder="Search exercises..."
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                className="rounded-lg border border-gray-300 bg-white px-4 py-2 pr-10 text-gray-800 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+              />
+              {searchQuery ? (
+                <TouchableOpacity
+                  onPress={() => setSearchQuery("")}
+                  className="absolute right-2 top-2"
+                >
+                  <Ionicons
+                    name="close-outline"
+                    size={20}
+                    color="gray"
+                  />
+                </TouchableOpacity>
+              ) : null}
+            </View>
+            
+            {/* Tags Dropdown */}
             <TouchableOpacity
-              onPress={() => setSearchQuery("")}
-              className="absolute right-3 top-2.5"
+              onPress={() => setShowTagsDropdown(!showTagsDropdown)}
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
             >
-              <Ionicons name="close-circle" size={20} color="gray" />
+              <View className="flex-row items-center gap-1">
+                <Ionicons 
+                  name="pricetag-outline" 
+                  size={16} 
+                  color={selectedTags.length > 0 ? "#3B82F6" : "gray"} 
+                />
+                {selectedTags.length > 0 && (
+                  <View className="rounded-full bg-blue-500 px-2 py-0.5">
+                    <Text className="text-xs font-bold text-white">
+                      {selectedTags.length}
+                    </Text>
+                  </View>
+                )}
+              </View>
             </TouchableOpacity>
-          ) : null}
+          </View>
+          
+          {/* Tags Dropdown Content */}
+          {showTagsDropdown && (
+            <View className="absolute top-12 right-0 z-10 w-48 rounded-lg border border-gray-300 bg-white p-2 shadow-lg dark:border-gray-600 dark:bg-gray-800">
+              <View className="mb-2 flex-row items-center justify-between">
+                <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Filter by Tags
+                </Text>
+                {selectedTags.length > 0 && (
+                  <TouchableOpacity
+                    onPress={() => setSelectedTags([])}
+                    className="rounded px-2 py-1"
+                  >
+                    <Text className="text-xs text-blue-500">Clear All</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+              {availableTags.length > 0 ? (
+                <View className="max-h-40">
+                  {availableTags.map((tag, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => handleToggleTag(tag)}
+                      className="flex-row items-center justify-between py-1"
+                    >
+                      <Text className="text-sm text-gray-700 dark:text-gray-300">
+                        {tag}
+                      </Text>
+                      {selectedTags.includes(tag) && (
+                        <Ionicons name="checkmark" size={16} color="#3B82F6" />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              ) : (
+                <Text className="text-sm text-gray-500 dark:text-gray-400">
+                  No tags available
+                </Text>
+              )}
+            </View>
+          )}
         </View>
+
+        {/* Selected Tags Display */}
+        {selectedTags.length > 0 && (
+          <View className="mt-2 flex-row flex-wrap gap-2">
+            {selectedTags.map((tag, index) => (
+              <Pressable
+                key={index}
+                onPress={() => handleToggleTag(tag)}
+                className="rounded-full bg-blue-500 px-3 py-1"
+              >
+                <Text className="text-xs font-medium text-white">
+                  {tag} ✕
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
+
         <View className="mt-4 flex-row justify-end gap-2">
           <TouchableOpacity
             className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"

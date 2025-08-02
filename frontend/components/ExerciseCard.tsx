@@ -116,6 +116,24 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
               : "Not set"}
           </Text>
         </View>
+
+        {/* Tags Section */}
+        {exercise.tags && exercise.tags.length > 0 && (
+          <View className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+            <View className="flex-row flex-wrap gap-2">
+              {exercise.tags.map((tag, index) => (
+                <View
+                  key={index}
+                  className="rounded-full bg-blue-100 px-3 py-1 dark:bg-blue-900/30"
+                >
+                  <Text className="text-xs font-medium text-blue-700 dark:text-blue-300">
+                    {tag}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );
