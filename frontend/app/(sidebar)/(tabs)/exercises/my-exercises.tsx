@@ -272,41 +272,58 @@ export default function MyExercises() {
           
           {/* Tags Dropdown Content */}
           {showTagsDropdown && (
-            <View className="absolute top-12 right-0 z-10 w-48 rounded-lg border border-gray-300 bg-white p-2 shadow-lg dark:border-gray-600 dark:bg-gray-800">
-              <View className="mb-2 flex-row items-center justify-between">
-                <Text className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Filter by Tags
-                </Text>
-                {selectedTags.length > 0 && (
-                  <TouchableOpacity
-                    onPress={() => setSelectedTags([])}
-                    className="rounded px-2 py-1"
-                  >
-                    <Text className="text-xs text-blue-500">Clear All</Text>
-                  </TouchableOpacity>
-                )}
+            <View className="absolute top-12 right-0 z-10 w-52 rounded-lg border border-gray-300 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800">
+              <View className="border-b border-gray-200 px-3 py-3 dark:border-gray-600">
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    Filter Tags
+                  </Text>
+                  {selectedTags.length > 0 && (
+                    <TouchableOpacity
+                      onPress={() => setSelectedTags([])}
+                      className="rounded-md bg-blue-50 px-2 py-1 dark:bg-blue-900/30"
+                    >
+                      <Text className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                        Clear All
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
               {availableTags.length > 0 ? (
-                <View className="max-h-40">
+                <ScrollView className="max-h-40" showsVerticalScrollIndicator={true}>
                   {availableTags.map((tag, index) => (
                     <TouchableOpacity
                       key={index}
                       onPress={() => handleToggleTag(tag)}
-                      className="flex-row items-center justify-between py-1"
+                      className={`mx-2 my-1 flex-row items-center justify-between rounded-md px-3 py-3 ${
+                        selectedTags.includes(tag)
+                          ? 'bg-blue-50 dark:bg-blue-900/30'
+                          : 'bg-transparent hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-gray-700 dark:active:bg-gray-600'
+                      }`}
+                      activeOpacity={0.7}
                     >
-                      <Text className="text-sm text-gray-700 dark:text-gray-300">
+                      <Text className={`text-sm ${
+                        selectedTags.includes(tag)
+                          ? 'font-medium text-blue-700 dark:text-blue-300'
+                          : 'text-gray-700 dark:text-gray-300'
+                      }`}>
                         {tag}
                       </Text>
                       {selectedTags.includes(tag) && (
-                        <Ionicons name="checkmark" size={16} color="#3B82F6" />
+                        <View className="rounded-full bg-blue-500 p-1">
+                          <Ionicons name="checkmark" size={12} color="white" />
+                        </View>
                       )}
                     </TouchableOpacity>
                   ))}
-                </View>
+                </ScrollView>
               ) : (
-                <Text className="text-sm text-gray-500 dark:text-gray-400">
-                  No tags available
-                </Text>
+                <View className="px-3 py-6">
+                  <Text className="text-center text-sm text-gray-500 dark:text-gray-400">
+                    No tags available
+                  </Text>
+                </View>
               )}
             </View>
           )}
