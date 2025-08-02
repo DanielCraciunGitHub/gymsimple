@@ -3,7 +3,7 @@ import { davidGogginsModeAtom } from "@/atoms/play";
 import { ExerciseDetails } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useSetAtom } from "jotai";
 import {
   ActivityIndicator,
@@ -342,11 +342,16 @@ export const WorkoutTimeline: React.FC = () => {
               <Ionicons name="flame" size={24} color="#FFFFFF" />
             </View>
           </TouchableOpacity>
-          <Link href="/play">
+          <TouchableOpacity
+            onPress={() => {
+              setDavidGogginsMode(false);
+              router.push("/play");
+            }}
+          > 
             <View className="h-12 w-12 items-center justify-center rounded-full bg-blue-500 shadow-lg">
               <Ionicons name="play" size={24} color="#FFFFFF" />
             </View>
-          </Link>
+          </TouchableOpacity>
         </View>
       </View>
 
