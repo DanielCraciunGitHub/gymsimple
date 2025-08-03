@@ -173,7 +173,7 @@ export default function MyExercises() {
     );
   }
 
-  if (exercises.length === 0) {
+  if (exercises.length === 0 && selectedTags.length === 0) {
     return (
       <View className="flex-1 items-center justify-center gap-6 bg-white dark:bg-black">
         <View className="items-center gap-2">
