@@ -135,6 +135,10 @@ export default function MyExercises() {
     );
   };
 
+  const handleSelectAll = () => {
+    setExercises(filteredExercises.map((exercise) => ({ ...exercise, selected: true })));
+  };
+
   const handleImport = async () => {
     try {
       const importedExercises = await importFile<ExerciseDetails[]>(
@@ -346,7 +350,12 @@ export default function MyExercises() {
           </View>
         )}
 
-        <View className="mt-4 flex-row justify-end gap-2">
+        <View className="mt-4 flex-row justify-between gap-2">
+          <TouchableOpacity className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2" onPress={() => handleSelectAll()}>
+            <Ionicons name="checkmark-outline" size={20} color="white" />
+            <Text className="text-white">Select All</Text>
+          </TouchableOpacity>
+          <View className="flex-row items-center justify-center gap-2"> 
           <TouchableOpacity
             className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
             onPress={async () => {
@@ -369,6 +378,7 @@ export default function MyExercises() {
               color="white"
             />
           </TouchableOpacity>
+          </View>
         </View>
       </View>
 
