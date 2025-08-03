@@ -144,6 +144,12 @@ export default function MyExercises() {
       const importedExercises = await importFile<ExerciseDetails[]>(
         exerciseDetailsArraySchema
       );
+      const tags = importedExercises?.flatMap((exercise) => exercise.tags);
+      const uniqueTags = [...new Set(tags)];
+      setAvailableTags(uniqueTags.filter((tag): tag is string => tag !== undefined && tag !== "" && tag !== null));
+      const localTags = await getTags();
+      await setItem(StorageKey.TAGS, [...new Set([...localTags, ...uniqueTags])]);
+
       if (importedExercises) {
         const newExercises = [...importedExercises, ...exercises];
         const uniqueExercises = newExercises.filter(
