@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
   AUTO_REST,
   DEFAULT_PREP_TIME,
   DEFAULT_SKIP_LOG,
-  DEFAULT_WORKOUT_REMINDER_TIME,
   getSettings,
   ISettings,
 } from "@/config/settings";
@@ -15,20 +14,35 @@ import { setItem, StorageKey } from "@/lib/local-storage";
 
 export default function Settings() {
   const [settings, setSettings] = useState<ISettings>({
-    workoutReminderTime: DEFAULT_WORKOUT_REMINDER_TIME,
     prepTime: DEFAULT_PREP_TIME,
     autoRest: AUTO_REST,
     skipLog: DEFAULT_SKIP_LOG,
   });
 
+  const [prepTimeInput, setPrepTimeInput] = useState<string>(DEFAULT_PREP_TIME.toString());
+  
+  const reminderTimeDebounceRef = useRef<number | undefined>(undefined);
+  const prepTimeDebounceRef = useRef<number | undefined>(undefined);
+
   useEffect(() => {
     loadSettings();
+    
+    // Cleanup function to clear timeouts on unmount
+    return () => {
+      if (reminderTimeDebounceRef.current) {
+        clearTimeout(reminderTimeDebounceRef.current);
+      }
+      if (prepTimeDebounceRef.current) {
+        clearTimeout(prepTimeDebounceRef.current);
+      }
+    };
   }, []);
 
   const loadSettings = async () => {
     const storedSettings = await getSettings();
     if (storedSettings) {
       setSettings(storedSettings);
+      setPrepTimeInput(storedSettings.prepTime.toString());
     }
   };
 
@@ -41,13 +55,33 @@ export default function Settings() {
     setSettings(newSettings);
   };
 
-  const updatePrepTime = async (minutes: number) => {
+  const updatePrepTime = async (seconds: number) => {
     const newSettings = {
       ...settings,
-      prepTime: minutes,
+      prepTime: seconds,
     };
     await setItem(StorageKey.SETTINGS, newSettings);
     setSettings(newSettings);
+  };
+
+ 
+
+  const handlePrepTimeChange = (text: string) => {
+    setPrepTimeInput(text);
+    
+    // Clear existing timeout
+    if (prepTimeDebounceRef.current) {
+      clearTimeout(prepTimeDebounceRef.current);
+    }
+    
+    // Set new timeout for debouncing
+    prepTimeDebounceRef.current = setTimeout(() => {
+      const seconds = parseInt(text, 10);
+      if (!isNaN(seconds) && seconds > 0) {
+        console.log("Prep time changed to", seconds);
+        updatePrepTime(seconds);
+      }
+    }, 500) as unknown as number;
   };
 
   const updateAutoRest = async (autoRest: boolean) => {
@@ -75,90 +109,32 @@ export default function Settings() {
         Workout Settings
       </Text>
 
-      <View className="rounded-lg bg-gray-100 p-4 dark:bg-gray-900">
-        <Text className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Reminder Time
-        </Text>
-        <Text className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-          How many minutes before your workout should we remind you?
-        </Text>
-
-        <View className="flex-row items-center justify-between gap-2">
-          {[15, 30, 45, 60].map((minutes) => (
-            <TouchableOpacity
-              key={minutes}
-              onPress={() => updateReminderTime(minutes)}
-              className={`flex-1 items-center rounded-md p-3 ${
-                settings.workoutReminderTime === minutes
-                  ? "bg-blue-500"
-                  : "bg-gray-200 dark:bg-gray-800"
-              }`}
-            >
-              <View className="flex-row items-center gap-1">
-                <Ionicons
-                  name="time-outline"
-                  size={16}
-                  color={
-                    settings.workoutReminderTime === minutes
-                      ? "#FFFFFF"
-                      : "#6B7280"
-                  }
-                />
-                <Text
-                  className={`text-sm font-medium ${
-                    settings.workoutReminderTime === minutes
-                      ? "text-white"
-                      : "text-gray-600 dark:text-gray-400"
-                  }`}
-                >
-                  {minutes}m
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
 
       <View className="rounded-lg bg-gray-100 p-4 dark:bg-gray-900">
         <Text className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
           Prep Time
         </Text>
         <Text className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-          How many seconds should we wait before starting the next
-          exercise?
+          How many seconds should we wait before starting the next exercise?
         </Text>
 
-        <View className="flex-row items-center justify-between gap-2">
-          {[20, 30, 60, 80, 100].map((seconds) => (
-            <TouchableOpacity
-              key={seconds}
-              onPress={() => updatePrepTime(seconds)}
-              className={`flex-1 items-center rounded-md p-3 ${
-                settings.prepTime === seconds
-                  ? "bg-blue-500"
-                  : "bg-gray-200 dark:bg-gray-800"
-              }`}
-            >
-              <View className="flex-row items-center gap-1">
-                <Ionicons
-                  name="time-outline"
-                  size={16}
-                  color={
-                    settings.prepTime === seconds ? "#FFFFFF" : "#6B7280"
-                  }
-                />
-                <Text
-                  className={`text-sm font-medium ${
-                    settings.prepTime === seconds
-                      ? "text-white"
-                      : "text-gray-600 dark:text-gray-400"
-                  }`}
-                >
-                  {seconds}s
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+        <View className="flex-row items-center gap-2">
+          <View className="flex-1">
+            <TextInput
+              value={prepTimeInput}
+              onChangeText={handlePrepTimeChange}
+              placeholder={DEFAULT_PREP_TIME.toString()}
+              placeholderTextColor="#9CA3AF"
+              keyboardType="numeric"
+              className="rounded-md bg-white px-4 py-3 text-sm font-medium text-gray-900 dark:bg-gray-800 dark:text-white"
+            />
+          </View>
+          <View className="flex-row items-center gap-1">
+            <Ionicons name="time-outline" size={16} color="#6B7280" />
+            <Text className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              seconds
+            </Text>
+          </View>
         </View>
       </View>
 

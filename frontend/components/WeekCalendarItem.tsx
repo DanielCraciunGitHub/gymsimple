@@ -3,7 +3,6 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { subMinutes } from "date-fns";
 import {
   Alert,
   Platform,
@@ -12,7 +11,6 @@ import {
   View,
 } from "react-native";
 
-import { getSettings } from "@/config/settings";
 import {
   clearNotificationsByWeekday,
   scheduleWeeklyNotification,
@@ -31,15 +29,6 @@ export default function WeekCalendarItem({
 }) {
   const [showPicker, setShowPicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
-  const [reminderTime, setReminderTime] = useState(30);
-
-  useEffect(() => {
-    const loadReminderTime = async () => {
-      const settings = await getSettings();
-      setReminderTime(settings.workoutReminderTime);
-    };
-    loadReminderTime();
-  }, []);
 
   useEffect(() => {
     const reminder = activeReminders.find(
@@ -80,9 +69,9 @@ export default function WeekCalendarItem({
       nextOccurrence.setSeconds(0);
 
       await scheduleWeeklyNotification({
-        title: `G ym Time 🏋️`,
-        message: `You have ${reminderTime} minutes to get to the gym!`,
-        date: subMinutes(nextOccurrence, reminderTime),
+        title: `Gym Time 🏋️`,
+        message: `Hit to the gym!`,
+        date: nextOccurrence,
       });
     }
   };

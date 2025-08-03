@@ -6,7 +6,6 @@ import {
   AUTO_REST,
   DEFAULT_PREP_TIME,
   DEFAULT_SKIP_LOG,
-  DEFAULT_WORKOUT_REMINDER_TIME,
   getSettings,
   ISettings,
 } from "@/config/settings";
@@ -20,7 +19,6 @@ export default function Play() {
   const [exercises, setExercises] = useState<ExerciseDetails[]>([]);
 
   const [settings, setSettings] = useState<ISettings>({
-    workoutReminderTime: DEFAULT_WORKOUT_REMINDER_TIME,
     prepTime: DEFAULT_PREP_TIME,
     autoRest: AUTO_REST,
     skipLog: DEFAULT_SKIP_LOG,
