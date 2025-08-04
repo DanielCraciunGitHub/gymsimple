@@ -51,7 +51,11 @@ export default function Layout() {
           options={{
             drawerLabel: "Import/Export",
             drawerIcon: ({ color, size }) => (
-              <Ionicons name="cloud-upload-outline" size={size} color={color} />
+              <Ionicons
+                name="cloud-upload-outline"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />

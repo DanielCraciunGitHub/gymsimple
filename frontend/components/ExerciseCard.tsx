@@ -119,7 +119,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
         {/* Tags Section */}
         {exercise.tags && exercise.tags.length > 0 && (
-          <View className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+          <View className="mt-3 border-t border-gray-200 pt-3 dark:border-gray-600">
             <View className="flex-row flex-wrap gap-2">
               {exercise.tags.map((tag, index) => (
                 <View

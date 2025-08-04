@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ExerciseDetails } from "@/validations";
 import {
   Pressable,
@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import uuid from "react-native-uuid";
 
+import { addTag, getTags } from "@/lib/local-storage";
 import { isValidNumber, isWholeNumber } from "@/lib/num";
-import { getTags, addTag } from "@/lib/local-storage";
 
 export const sortBySelectionOrder = (
   exercises: ExerciseDetails[]
@@ -245,7 +245,9 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
         ...details,
         tags: [...(details.tags || []), trimmedTag],
       });
-      setAvailableTags(prev => prev.includes(trimmedTag) ? prev : [...prev, trimmedTag].sort());
+      setAvailableTags((prev) =>
+        prev.includes(trimmedTag) ? prev : [...prev, trimmedTag].sort()
+      );
       setNewTag("");
     }
   };
@@ -254,7 +256,7 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
     if (details.tags && details.tags.includes(tag)) {
       setDetails({
         ...details,
-        tags: details.tags.filter(t => t !== tag),
+        tags: details.tags.filter((t) => t !== tag),
       });
     } else {
       setDetails({
@@ -269,8 +271,8 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
     currentStepData.field === "weight"
       ? details.weight.value
       : currentStepData.field === "tags"
-      ? newTag
-      : (details[currentStepData.field] as string);
+        ? newTag
+        : (details[currentStepData.field] as string);
 
   return (
     <View className="w-full flex-1 bg-white dark:bg-black">
@@ -280,7 +282,7 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
           <View className="flex-row items-start justify-center">
             {steps.map((step, index) => (
               <React.Fragment key={index}>
-                <TouchableOpacity 
+                <TouchableOpacity
                   className="items-center"
                   onPress={() => setCurrentStep(index)}
                   activeOpacity={0.7}
@@ -370,9 +372,10 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
         <View className="mb-6">
           <Text className="mb-4 text-center text-lg font-medium text-gray-700 dark:text-gray-300">
             {currentStepData.label}
-            {currentStepData.field !== "weight" && currentStepData.field !== "tags" && (
-              <Text className="text-red-500">*</Text>
-            )}
+            {currentStepData.field !== "weight" &&
+              currentStepData.field !== "tags" && (
+                <Text className="text-red-500">*</Text>
+              )}
           </Text>
           <TextInput
             className={`h-14 w-full rounded-md border px-4 text-lg focus:border-blue-500 dark:bg-gray-800 dark:text-white ${
@@ -455,13 +458,14 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
             <View className="mt-4">
               {/* Add New Tag */}
               <View className="flex-row items-center gap-2">
-                
                 <TouchableOpacity
                   onPress={handleAddNewTag}
                   className="rounded-md bg-green-500 px-4 py-2"
                   disabled={!newTag.trim()}
                 >
-                  <Text className="text-xs font-medium text-white">Add</Text>
+                  <Text className="text-xs font-medium text-white">
+                    Add
+                  </Text>
                 </TouchableOpacity>
               </View>
               {/* Selected Tags */}
@@ -485,16 +489,17 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
                   </View>
                 </View>
               )}
-              
+
               {/* Available Tags */}
-              {availableTags.filter(tag => !details.tags?.includes(tag)).length > 0 && (
+              {availableTags.filter((tag) => !details.tags?.includes(tag))
+                .length > 0 && (
                 <View className="mb-4">
                   <Text className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Available Tags:
                   </Text>
                   <View className="flex-row flex-wrap gap-2">
                     {availableTags
-                      .filter(tag => !details.tags?.includes(tag))
+                      .filter((tag) => !details.tags?.includes(tag))
                       .map((tag, index) => (
                         <Pressable
                           key={index}

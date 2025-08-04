@@ -347,7 +347,7 @@ export const WorkoutTimeline: React.FC = () => {
               setDavidGogginsMode(false);
               router.push("/play");
             }}
-          > 
+          >
             <View className="h-12 w-12 items-center justify-center rounded-full bg-blue-500 shadow-lg">
               <Ionicons name="play" size={24} color="#FFFFFF" />
             </View>

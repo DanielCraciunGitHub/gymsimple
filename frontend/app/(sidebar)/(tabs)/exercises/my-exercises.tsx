@@ -1,7 +1,5 @@
 import React, { useCallback, useState } from "react";
-import {
-  ExerciseDetails,
-} from "@/validations";
+import { ExerciseDetails } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
@@ -16,7 +14,12 @@ import {
   View,
 } from "react-native";
 
-import { getItem, setItem, StorageKey, getTags } from "@/lib/local-storage";
+import {
+  getItem,
+  getTags,
+  setItem,
+  StorageKey,
+} from "@/lib/local-storage";
 import { ExerciseCard } from "@/components/ExerciseCard";
 import { sortBySelectionOrder } from "@/components/ExerciseInput";
 
@@ -90,7 +93,12 @@ export default function MyExercises() {
       return e;
     });
 
-    console.log("updatedExercises", updatedExercises.map((exercise) => { return exercise.selectionOrder }));
+    console.log(
+      "updatedExercises",
+      updatedExercises.map((exercise) => {
+        return exercise.selectionOrder;
+      })
+    );
 
     setExercises(updatedExercises);
     await setItem(StorageKey.EXERCISES, updatedExercises);
@@ -120,28 +128,36 @@ export default function MyExercises() {
   };
 
   const filteredExercises = exercises.filter((exercise) => {
-    const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTags = selectedTags.length === 0 ||
-      selectedTags.some(tag => exercise.tags?.includes(tag));
+    const matchesSearch = exercise.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesTags =
+      selectedTags.length === 0 ||
+      selectedTags.some((tag) => exercise.tags?.includes(tag));
     return matchesSearch && matchesTags;
   });
 
   const handleToggleTag = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag)
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
     );
   };
 
   const handleSelectAll = async () => {
-    const selectedExercises = filteredExercises.map((exercise, index) => ({ ...exercise, selected: true, selectionOrder: index + 1 }));
-    console.log("selectedExercises - Select ALL", selectedExercises.map((exercise) => { return exercise.selectionOrder }));
+    const selectedExercises = filteredExercises.map((exercise, index) => ({
+      ...exercise,
+      selected: true,
+      selectionOrder: index + 1,
+    }));
+    console.log(
+      "selectedExercises - Select ALL",
+      selectedExercises.map((exercise) => {
+        return exercise.selectionOrder;
+      })
+    );
     setExercises(selectedExercises);
     await setItem(StorageKey.EXERCISES, selectedExercises);
   };
-
-
 
   if (isLoading) {
     return (
@@ -182,12 +198,19 @@ export default function MyExercises() {
       {/* Overlay to close dropdown */}
       {showTagsDropdown && (
         <TouchableOpacity
-          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 5 }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 5,
+          }}
           onPress={() => setShowTagsDropdown(false)}
           activeOpacity={1}
         />
       )}
-      
+
       <View className="px-4 py-4">
         <View className="flex-row items-center justify-between">
           <Text className="text-2xl font-bold text-gray-800 dark:text-white">
@@ -201,7 +224,7 @@ export default function MyExercises() {
         </View>
         <View className="relative mt-4">
           <View className="flex-row items-center gap-2">
-            <View className="flex-1 relative">
+            <View className="relative flex-1">
               <TextInput
                 placeholder="Search exercises..."
                 value={searchQuery}
@@ -213,25 +236,21 @@ export default function MyExercises() {
                   onPress={() => setSearchQuery("")}
                   className="absolute right-2 top-2"
                 >
-                  <Ionicons
-                    name="close-outline"
-                    size={20}
-                    color="gray"
-                  />
+                  <Ionicons name="close-outline" size={20} color="gray" />
                 </TouchableOpacity>
               ) : null}
             </View>
-            
+
             {/* Tags Dropdown */}
             <TouchableOpacity
               onPress={() => setShowTagsDropdown(!showTagsDropdown)}
               className="rounded-lg border border-gray-300 bg-white px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
             >
               <View className="flex-row items-center gap-1">
-                <Ionicons 
-                  name="pricetag-outline" 
-                  size={16} 
-                  color={selectedTags.length > 0 ? "#3B82F6" : "gray"} 
+                <Ionicons
+                  name="pricetag-outline"
+                  size={16}
+                  color={selectedTags.length > 0 ? "#3B82F6" : "gray"}
                 />
                 {selectedTags.length > 0 && (
                   <View className="rounded-full bg-blue-500 px-2 py-0.5">
@@ -243,10 +262,10 @@ export default function MyExercises() {
               </View>
             </TouchableOpacity>
           </View>
-          
+
           {/* Tags Dropdown Content */}
           {showTagsDropdown && (
-            <View className="absolute top-12 right-0 z-10 w-52 rounded-lg border border-gray-300 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800">
+            <View className="absolute right-0 top-12 z-10 w-52 rounded-lg border border-gray-300 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-800">
               <View className="border-b border-gray-200 px-3 py-3 dark:border-gray-600">
                 <View className="flex-row items-center justify-between">
                   <Text className="text-sm font-semibold text-gray-700 dark:text-gray-300">
@@ -264,33 +283,49 @@ export default function MyExercises() {
                   )}
                 </View>
               </View>
-              {availableTags.filter((tag) => tag !== undefined && tag !== "" && tag !== null).length > 0 ? (
-                <ScrollView className="max-h-40" showsVerticalScrollIndicator={true}>
-                  {availableTags.filter((tag) => tag !== undefined && tag !== "" && tag !== null).map((tag, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => handleToggleTag(tag)}
-                      className={`mx-2 my-1 flex-row items-center justify-between rounded-md px-3 py-3 ${
-                        selectedTags.includes(tag)
-                          ? 'bg-blue-50 dark:bg-blue-900/30'
-                          : 'bg-transparent hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-gray-700 dark:active:bg-gray-600'
-                      }`}
-                      activeOpacity={0.7}
-                    >
-                      <Text className={`text-sm ${
-                        selectedTags.includes(tag)
-                          ? 'font-medium text-blue-700 dark:text-blue-300'
-                          : 'text-gray-700 dark:text-gray-300'
-                      }`}>
-                        {tag}
-                      </Text>
-                      {selectedTags.includes(tag) && (
-                        <View className="rounded-full bg-blue-500 p-1">
-                          <Ionicons name="checkmark" size={12} color="white" />
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  ))}
+              {availableTags.filter(
+                (tag) => tag !== undefined && tag !== "" && tag !== null
+              ).length > 0 ? (
+                <ScrollView
+                  className="max-h-40"
+                  showsVerticalScrollIndicator={true}
+                >
+                  {availableTags
+                    .filter(
+                      (tag) =>
+                        tag !== undefined && tag !== "" && tag !== null
+                    )
+                    .map((tag, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => handleToggleTag(tag)}
+                        className={`mx-2 my-1 flex-row items-center justify-between rounded-md px-3 py-3 ${
+                          selectedTags.includes(tag)
+                            ? "bg-blue-50 dark:bg-blue-900/30"
+                            : "bg-transparent hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-gray-700 dark:active:bg-gray-600"
+                        }`}
+                        activeOpacity={0.7}
+                      >
+                        <Text
+                          className={`text-sm ${
+                            selectedTags.includes(tag)
+                              ? "font-medium text-blue-700 dark:text-blue-300"
+                              : "text-gray-700 dark:text-gray-300"
+                          }`}
+                        >
+                          {tag}
+                        </Text>
+                        {selectedTags.includes(tag) && (
+                          <View className="rounded-full bg-blue-500 p-1">
+                            <Ionicons
+                              name="checkmark"
+                              size={12}
+                              color="white"
+                            />
+                          </View>
+                        )}
+                      </TouchableOpacity>
+                    ))}
                 </ScrollView>
               ) : (
                 <View className="px-3 py-6">
@@ -321,22 +356,25 @@ export default function MyExercises() {
         )}
 
         <View className="mt-4 flex-row justify-between gap-2">
-          <TouchableOpacity className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2" onPress={async () => { await handleSelectAll() }}>
+          <TouchableOpacity
+            className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
+            onPress={async () => {
+              await handleSelectAll();
+            }}
+          >
             <Ionicons name="checkmark-outline" size={20} color="white" />
             <Text className="text-white">Select All</Text>
           </TouchableOpacity>
-          <View className="flex-row items-center justify-center gap-2"> 
-          <Link href="/(sidebar)/import-export" asChild>
-            <TouchableOpacity
-              className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
-            >
-              <Ionicons
-                name="folder-open-outline"
-                size={20}
-                color="white"
-              />
-            </TouchableOpacity>
-          </Link>
+          <View className="flex-row items-center justify-center gap-2">
+            <Link href="/(sidebar)/import-export" asChild>
+              <TouchableOpacity className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2">
+                <Ionicons
+                  name="folder-open-outline"
+                  size={20}
+                  color="white"
+                />
+              </TouchableOpacity>
+            </Link>
           </View>
         </View>
       </View>

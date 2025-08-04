@@ -212,7 +212,7 @@ export default function WorkoutPlayer({
       } else {
         router.push("/(sidebar)/(tabs)/sessions");
       }
-    } else {  
+    } else {
       setQuickLog(true);
     }
   };

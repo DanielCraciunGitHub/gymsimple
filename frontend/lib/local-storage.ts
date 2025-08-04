@@ -83,7 +83,7 @@ export async function addTag(tag: string): Promise<void> {
   try {
     const existingTags = await getTags();
     const trimmedTag = tag.trim();
-    
+
     if (trimmedTag && !existingTags.includes(trimmedTag)) {
       const updatedTags = [...existingTags, trimmedTag].sort();
       await setItem(StorageKey.TAGS, updatedTags);
@@ -97,7 +97,7 @@ export async function addTag(tag: string): Promise<void> {
 export async function removeTag(tag: string): Promise<void> {
   try {
     const existingTags = await getTags();
-    const updatedTags = existingTags.filter(t => t !== tag);
+    const updatedTags = existingTags.filter((t) => t !== tag);
     await setItem(StorageKey.TAGS, updatedTags);
   } catch (error) {
     console.error("Error removing tag:", error);

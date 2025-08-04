@@ -1,12 +1,28 @@
 import React from "react";
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { config } from "@/config";
+import {
+  ExerciseDetails,
+  exerciseDetailsArraySchema,
+  WorkoutSession,
+  workoutSessionArraySchema,
+} from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
-import { ExerciseDetails, WorkoutSession, exerciseDetailsArraySchema, workoutSessionArraySchema } from "@/validations";
+import {
+  Alert,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
 import { exportFile } from "@/lib/export";
 import { importFile } from "@/lib/import";
-import { getItem, setItem, StorageKey, getTags } from "@/lib/local-storage";
-import { config } from "@/config";
-
+import {
+  getItem,
+  getTags,
+  setItem,
+  StorageKey,
+} from "@/lib/local-storage";
 
 export default function ImportExport() {
   const handleImportExercises = async () => {
@@ -14,17 +30,25 @@ export default function ImportExport() {
       const importedExercises = await importFile<ExerciseDetails[]>(
         exerciseDetailsArraySchema
       );
-      
+
       if (importedExercises) {
         // Handle tags
-        const tags = importedExercises?.flatMap((exercise) => exercise.tags);
+        const tags = importedExercises?.flatMap(
+          (exercise) => exercise.tags
+        );
         const uniqueTags = [...new Set(tags)];
-        const filteredTags = uniqueTags.filter((tag): tag is string => tag !== undefined && tag !== "" && tag !== null);
+        const filteredTags = uniqueTags.filter(
+          (tag): tag is string =>
+            tag !== undefined && tag !== "" && tag !== null
+        );
         const localTags = await getTags();
-        await setItem(StorageKey.TAGS, [...new Set([...localTags, ...filteredTags])]);
+        await setItem(StorageKey.TAGS, [
+          ...new Set([...localTags, ...filteredTags]),
+        ]);
 
         // Handle exercises
-        const existingExercises = await getItem<ExerciseDetails[]>(StorageKey.EXERCISES) || [];
+        const existingExercises =
+          (await getItem<ExerciseDetails[]>(StorageKey.EXERCISES)) || [];
         const newExercises = [...importedExercises, ...existingExercises];
         const uniqueExercises = newExercises.filter(
           (exercise, index, self) =>
@@ -41,7 +65,9 @@ export default function ImportExport() {
 
   const handleExportExercises = async () => {
     try {
-      const exercises = await getItem<ExerciseDetails[]>(StorageKey.EXERCISES);
+      const exercises = await getItem<ExerciseDetails[]>(
+        StorageKey.EXERCISES
+      );
       if (exercises && exercises.length > 0) {
         await exportFile("exercises.json", exercises);
         Alert.alert("Success", "Exercises exported successfully!");
@@ -59,9 +85,11 @@ export default function ImportExport() {
       const importedSessions = await importFile<WorkoutSession[]>(
         workoutSessionArraySchema
       );
-      
+
       if (importedSessions) {
-        const existingSessions = await getItem<WorkoutSession[]>(StorageKey.WORKOUT_SESSIONS) || [];
+        const existingSessions =
+          (await getItem<WorkoutSession[]>(StorageKey.WORKOUT_SESSIONS)) ||
+          [];
         const newSessions = [...importedSessions, ...existingSessions];
         const uniqueSessions = newSessions
           .filter(
@@ -69,8 +97,10 @@ export default function ImportExport() {
               index === self.findIndex((t) => t.id === session.id)
           )
           .sort((a, b) => {
-            const dateA = a.date instanceof Date ? a.date : new Date(a.date);
-            const dateB = b.date instanceof Date ? b.date : new Date(b.date);
+            const dateA =
+              a.date instanceof Date ? a.date : new Date(a.date);
+            const dateB =
+              b.date instanceof Date ? b.date : new Date(b.date);
             return dateB.getTime() - dateA.getTime();
           });
         await setItem(StorageKey.WORKOUT_SESSIONS, uniqueSessions);
@@ -84,7 +114,9 @@ export default function ImportExport() {
 
   const handleExportSessions = async () => {
     try {
-      const sessions = await getItem<WorkoutSession[]>(StorageKey.WORKOUT_SESSIONS);
+      const sessions = await getItem<WorkoutSession[]>(
+        StorageKey.WORKOUT_SESSIONS
+      );
       if (sessions && sessions.length > 0) {
         await exportFile("workout-sessions.json", sessions);
         Alert.alert("Success", "Workout sessions exported successfully!");
@@ -114,26 +146,34 @@ export default function ImportExport() {
               </Text>
             </View>
           </View>
-          
+
           <View className="p-4">
             <Text className="mb-4 text-gray-600 dark:text-gray-300">
               Import or export your {config.appName} exercise data.
             </Text>
-            
+
             <View className="flex-row gap-3">
               <TouchableOpacity
                 onPress={handleImportExercises}
                 className="flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 p-3"
               >
-                <Ionicons name="cloud-upload-outline" size={20} color="white" />
+                <Ionicons
+                  name="cloud-upload-outline"
+                  size={20}
+                  color="white"
+                />
                 <Text className="font-medium text-white">Import</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 onPress={handleExportExercises}
                 className="flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 p-3"
               >
-                <Ionicons name="cloud-download-outline" size={20} color="white" />
+                <Ionicons
+                  name="cloud-download-outline"
+                  size={20}
+                  color="white"
+                />
                 <Text className="font-medium text-white">Export</Text>
               </TouchableOpacity>
             </View>
@@ -150,26 +190,34 @@ export default function ImportExport() {
               </Text>
             </View>
           </View>
-          
+
           <View className="p-4">
             <Text className="mb-4 text-gray-600 dark:text-gray-300">
               Import or export your {config.appName} workout sessions.
             </Text>
-            
+
             <View className="flex-row gap-3">
               <TouchableOpacity
                 onPress={handleImportSessions}
                 className="flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 p-3"
               >
-                <Ionicons name="cloud-upload-outline" size={20} color="white" />
+                <Ionicons
+                  name="cloud-upload-outline"
+                  size={20}
+                  color="white"
+                />
                 <Text className="font-medium text-white">Import</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 onPress={handleExportSessions}
                 className="flex-1 flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 p-3"
               >
-                <Ionicons name="cloud-download-outline" size={20} color="white" />
+                <Ionicons
+                  name="cloud-download-outline"
+                  size={20}
+                  color="white"
+                />
                 <Text className="font-medium text-white">Export</Text>
               </TouchableOpacity>
             </View>

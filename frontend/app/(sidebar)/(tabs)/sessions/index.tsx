@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { WorkoutSession, workoutSessionArraySchema } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { router, Link } from "expo-router";
+import { Link, router } from "expo-router";
 import {
   ActivityIndicator,
   Alert,
@@ -102,9 +102,7 @@ export default function WorkoutSessions() {
         </Text>
         <View className="flex-row items-center gap-2">
           <Link href="/(sidebar)/import-export" asChild>
-            <TouchableOpacity
-              className="rounded-lg bg-blue-500 px-4 py-2"
-            >
+            <TouchableOpacity className="rounded-lg bg-blue-500 px-4 py-2">
               <Ionicons
                 name="folder-open-outline"
                 size={20}
@@ -127,9 +125,7 @@ export default function WorkoutSessions() {
         </View>
         <View className="flex-row items-center gap-2">
           <Link href="/(sidebar)/import-export" asChild>
-            <TouchableOpacity
-              className="rounded-lg bg-blue-500 px-4 py-2"
-            >
+            <TouchableOpacity className="rounded-lg bg-blue-500 px-4 py-2">
               <Ionicons
                 name="folder-open-outline"
                 size={20}

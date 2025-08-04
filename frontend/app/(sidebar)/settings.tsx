@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Text, TouchableOpacity, View, TextInput } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
@@ -19,14 +19,16 @@ export default function Settings() {
     skipLog: DEFAULT_SKIP_LOG,
   });
 
-  const [prepTimeInput, setPrepTimeInput] = useState<string>(DEFAULT_PREP_TIME.toString());
-  
+  const [prepTimeInput, setPrepTimeInput] = useState<string>(
+    DEFAULT_PREP_TIME.toString()
+  );
+
   const reminderTimeDebounceRef = useRef<number | undefined>(undefined);
   const prepTimeDebounceRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     loadSettings();
-    
+
     // Cleanup function to clear timeouts on unmount
     return () => {
       if (reminderTimeDebounceRef.current) {
@@ -64,16 +66,14 @@ export default function Settings() {
     setSettings(newSettings);
   };
 
- 
-
   const handlePrepTimeChange = (text: string) => {
     setPrepTimeInput(text);
-    
+
     // Clear existing timeout
     if (prepTimeDebounceRef.current) {
       clearTimeout(prepTimeDebounceRef.current);
     }
-    
+
     // Set new timeout for debouncing
     prepTimeDebounceRef.current = setTimeout(() => {
       const seconds = parseInt(text, 10);
@@ -109,13 +109,13 @@ export default function Settings() {
         Workout Settings
       </Text>
 
-
       <View className="rounded-lg bg-gray-100 p-4 dark:bg-gray-900">
         <Text className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
           Prep Time
         </Text>
         <Text className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-          How many seconds should we wait before starting the next exercise?
+          How many seconds should we wait before starting the next
+          exercise?
         </Text>
 
         <View className="flex-row items-center gap-2">
