@@ -47,6 +47,15 @@ export default function Layout() {
           }}
         />
         <Drawer.Screen
+          name="import-export"
+          options={{
+            drawerLabel: "Import/Export",
+            drawerIcon: ({ color, size }) => (
+              <Ionicons name="cloud-upload-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Drawer.Screen
           name="settings"
           options={{
             drawerLabel: "Settings",

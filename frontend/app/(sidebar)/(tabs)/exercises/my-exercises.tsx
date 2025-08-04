@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import {
   ExerciseDetails,
-  exerciseDetailsArraySchema,
 } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
@@ -17,8 +16,6 @@ import {
   View,
 } from "react-native";
 
-import { exportFile } from "@/lib/export";
-import { importFile } from "@/lib/import";
 import { getItem, setItem, StorageKey, getTags } from "@/lib/local-storage";
 import { ExerciseCard } from "@/components/ExerciseCard";
 import { sortBySelectionOrder } from "@/components/ExerciseInput";
@@ -144,31 +141,7 @@ export default function MyExercises() {
     await setItem(StorageKey.EXERCISES, selectedExercises);
   };
 
-  const handleImport = async () => {
-    try {
-      const importedExercises = await importFile<ExerciseDetails[]>(
-        exerciseDetailsArraySchema
-      );
-      const tags = importedExercises?.flatMap((exercise) => exercise.tags);
-      const uniqueTags = [...new Set(tags)];
-      setAvailableTags(uniqueTags.filter((tag): tag is string => tag !== undefined && tag !== "" && tag !== null));
-      const localTags = await getTags();
-      await setItem(StorageKey.TAGS, [...new Set([...localTags, ...uniqueTags])]);
 
-      if (importedExercises) {
-        const newExercises = [...importedExercises, ...exercises];
-        const uniqueExercises = newExercises.filter(
-          (exercise, index, self) =>
-            index === self.findIndex((t) => t.id === exercise.id)
-        );
-        setExercises(uniqueExercises);
-        await setItem(StorageKey.EXERCISES, uniqueExercises);
-      }
-    } catch (error) {
-      console.error("Error importing exercises:", error);
-      Alert.alert("Error", "Check your file format and try again.");
-    }
-  };
 
   if (isLoading) {
     return (
@@ -195,20 +168,6 @@ export default function MyExercises() {
               <Text className="text-3xl font-bold text-white">+</Text>
             </Pressable>
           </Link>
-          <Text className="text-center text-gray-600 dark:text-gray-300">
-            or
-          </Text>
-          <TouchableOpacity
-            className="flex-row items-center gap-2 rounded-lg bg-blue-500 px-6 py-3"
-            onPress={handleImport}
-          >
-            <Ionicons
-              name="cloud-upload-outline"
-              size={20}
-              color="white"
-            />
-            <Text className="text-white">Import Exercises</Text>
-          </TouchableOpacity>
         </View>
       </View>
     );
@@ -367,28 +326,17 @@ export default function MyExercises() {
             <Text className="text-white">Select All</Text>
           </TouchableOpacity>
           <View className="flex-row items-center justify-center gap-2"> 
-          <TouchableOpacity
-            className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
-            onPress={async () => {
-              await exportFile("exercises.json", exercises);
-            }}
-          >
-            <Ionicons
-              name="cloud-download-outline"
-              size={20}
-              color="white"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
-            onPress={handleImport}
-          >
-            <Ionicons
-              name="cloud-upload-outline"
-              size={20}
-              color="white"
-            />
-          </TouchableOpacity>
+          <Link href="/(sidebar)/import-export" asChild>
+            <TouchableOpacity
+              className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
+            >
+              <Ionicons
+                name="folder-open-outline"
+                size={20}
+                color="white"
+              />
+            </TouchableOpacity>
+          </Link>
           </View>
         </View>
       </View>

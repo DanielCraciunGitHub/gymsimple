@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import { WorkoutSession, workoutSessionArraySchema } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { router } from "expo-router";
+import { router, Link } from "expo-router";
 import {
   ActivityIndicator,
   Alert,
@@ -12,7 +12,6 @@ import {
   View,
 } from "react-native";
 
-import { exportFile } from "@/lib/export";
 import { importFile } from "@/lib/import";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { WorkoutSessionCard } from "@/components/WorkoutSessionCard";
@@ -101,15 +100,19 @@ export default function WorkoutSessions() {
         <Text className="mt-2 text-center text-gray-600 dark:text-gray-300">
           Complete your first workout to see your sessions here!
         </Text>
-        <TouchableOpacity
-          className="rounded-lg bg-blue-500 px-4 py-2"
-          onPress={handleImport}
-        >
-          <View className="flex-row items-center gap-2">
-            <Ionicons name="cloud-upload-outline" size={20} color="white" />
-            <Text className="text-white">Import Saved Sessions</Text>
-          </View>
-        </TouchableOpacity>
+        <View className="flex-row items-center gap-2">
+          <Link href="/(sidebar)/import-export" asChild>
+            <TouchableOpacity
+              className="rounded-lg bg-blue-500 px-4 py-2"
+            >
+              <Ionicons
+                name="folder-open-outline"
+                size={20}
+                color="white"
+              />
+            </TouchableOpacity>
+          </Link>
+        </View>
       </View>
     );
   }
@@ -123,28 +126,17 @@ export default function WorkoutSessions() {
           </Text>
         </View>
         <View className="flex-row items-center gap-2">
-          <TouchableOpacity
-            className="rounded-lg bg-blue-500 px-4 py-2"
-            onPress={async () => {
-              await exportFile("workout-sessions.json", workoutSessions);
-            }}
-          >
-            <Ionicons
-              name="cloud-download-outline"
-              size={20}
-              color="white"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="rounded-lg bg-blue-500 px-4 py-2"
-            onPress={handleImport}
-          >
-            <Ionicons
-              name="cloud-upload-outline"
-              size={20}
-              color="white"
-            />
-          </TouchableOpacity>
+          <Link href="/(sidebar)/import-export" asChild>
+            <TouchableOpacity
+              className="rounded-lg bg-blue-500 px-4 py-2"
+            >
+              <Ionicons
+                name="folder-open-outline"
+                size={20}
+                color="white"
+              />
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
 
