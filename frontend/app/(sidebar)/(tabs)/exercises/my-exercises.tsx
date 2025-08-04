@@ -93,6 +93,8 @@ export default function MyExercises() {
       return e;
     });
 
+    console.log("updatedExercises", updatedExercises.map((exercise) => { return exercise.selectionOrder }));
+
     setExercises(updatedExercises);
     await setItem(StorageKey.EXERCISES, updatedExercises);
   };
@@ -135,8 +137,11 @@ export default function MyExercises() {
     );
   };
 
-  const handleSelectAll = () => {
-    setExercises(filteredExercises.map((exercise) => ({ ...exercise, selected: true })));
+  const handleSelectAll = async () => {
+    const selectedExercises = filteredExercises.map((exercise, index) => ({ ...exercise, selected: true, selectionOrder: index + 1 }));
+    console.log("selectedExercises - Select ALL", selectedExercises.map((exercise) => { return exercise.selectionOrder }));
+    setExercises(selectedExercises);
+    await setItem(StorageKey.EXERCISES, selectedExercises);
   };
 
   const handleImport = async () => {
@@ -202,7 +207,7 @@ export default function MyExercises() {
               size={20}
               color="white"
             />
-            <Text className="text-white">Import Exercise Details</Text>
+            <Text className="text-white">Import Exercises</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -300,9 +305,9 @@ export default function MyExercises() {
                   )}
                 </View>
               </View>
-              {availableTags.length > 0 ? (
+              {availableTags.filter((tag) => tag !== undefined && tag !== "" && tag !== null).length > 0 ? (
                 <ScrollView className="max-h-40" showsVerticalScrollIndicator={true}>
-                  {availableTags.map((tag, index) => (
+                  {availableTags.filter((tag) => tag !== undefined && tag !== "" && tag !== null).map((tag, index) => (
                     <TouchableOpacity
                       key={index}
                       onPress={() => handleToggleTag(tag)}
@@ -357,7 +362,7 @@ export default function MyExercises() {
         )}
 
         <View className="mt-4 flex-row justify-between gap-2">
-          <TouchableOpacity className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2" onPress={() => handleSelectAll()}>
+          <TouchableOpacity className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2" onPress={async () => { await handleSelectAll() }}>
             <Ionicons name="checkmark-outline" size={20} color="white" />
             <Text className="text-white">Select All</Text>
           </TouchableOpacity>

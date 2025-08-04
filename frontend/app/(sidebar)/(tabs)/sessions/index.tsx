@@ -105,7 +105,10 @@ export default function WorkoutSessions() {
           className="rounded-lg bg-blue-500 px-4 py-2"
           onPress={handleImport}
         >
-          <Ionicons name="cloud-upload-outline" size={20} color="white" />
+          <View className="flex-row items-center gap-2">
+            <Ionicons name="cloud-upload-outline" size={20} color="white" />
+            <Text className="text-white">Import Saved Sessions</Text>
+          </View>
         </TouchableOpacity>
       </View>
     );
