@@ -11,12 +11,8 @@
     "lint": "expo lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "cd .. && husky frontend/.husky",
+    "prepare": "husky",
     "check-types": "tsc --noEmit --pretty"
-  },
-  "husky": {
-    "pre-commit": "cd frontend && npx lint-staged",
-    "pre-push": "cd frontend && npm run check-types"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
