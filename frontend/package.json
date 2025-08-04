@@ -14,6 +14,10 @@
     "prepare": "husky",
     "check-types": "tsc --noEmit --pretty"
   },
+  "husky": {
+    "pre-commit": "npx lint-staged",
+    "pre-push": "npm run check-types"
+  },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-native-async-storage/async-storage": "^2.2.0",
