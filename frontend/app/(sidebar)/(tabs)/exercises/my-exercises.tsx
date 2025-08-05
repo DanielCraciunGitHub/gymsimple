@@ -155,8 +155,16 @@ export default function MyExercises() {
         return exercise.selectionOrder;
       })
     );
-    setExercises(selectedExercises);
-    await setItem(StorageKey.EXERCISES, selectedExercises);
+
+    const updatedExercises = exercises.map((exercise) => {
+      const selectedVersion = selectedExercises.find(
+        (e) => e.id === exercise.id
+      );
+      return selectedVersion || exercise;
+    });
+
+    setExercises(updatedExercises);
+    await setItem(StorageKey.EXERCISES, updatedExercises);
   };
 
   if (isLoading) {
