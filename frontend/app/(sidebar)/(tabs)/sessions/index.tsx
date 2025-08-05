@@ -2,13 +2,12 @@ import React, { useCallback, useState } from "react";
 import { WorkoutSession, workoutSessionArraySchema } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import {
   ActivityIndicator,
   Alert,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -100,39 +99,17 @@ export default function WorkoutSessions() {
         <Text className="mt-2 text-center text-gray-600 dark:text-gray-300">
           Complete your first workout to see your sessions here!
         </Text>
-        <View className="flex-row items-center gap-2">
-          <Link href="/(sidebar)/import-export" asChild>
-            <TouchableOpacity className="rounded-lg bg-blue-500 px-4 py-2">
-              <Ionicons
-                name="folder-open-outline"
-                size={20}
-                color="white"
-              />
-            </TouchableOpacity>
-          </Link>
-        </View>
       </View>
     );
   }
 
   return (
     <View className="flex-1 bg-white dark:bg-black">
-      <View className="flex-row items-center justify-between px-4 py-4">
+      <View className="px-4 py-4">
         <View>
           <Text className="text-2xl font-bold text-gray-800 dark:text-white">
             Workout Sessions
           </Text>
-        </View>
-        <View className="flex-row items-center gap-2">
-          <Link href="/(sidebar)/import-export" asChild>
-            <TouchableOpacity className="rounded-lg bg-blue-500 px-4 py-2">
-              <Ionicons
-                name="folder-open-outline"
-                size={20}
-                color="white"
-              />
-            </TouchableOpacity>
-          </Link>
         </View>
       </View>
 

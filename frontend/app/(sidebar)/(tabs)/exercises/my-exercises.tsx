@@ -363,7 +363,7 @@ export default function MyExercises() {
           </View>
         )}
 
-        <View className="mt-4 flex-row justify-between gap-2">
+        <View className="mt-4 flex-row justify-end gap-2">
           <TouchableOpacity
             className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2"
             onPress={async () => {
@@ -373,17 +373,6 @@ export default function MyExercises() {
             <Ionicons name="checkmark-outline" size={20} color="white" />
             <Text className="text-white">Select All</Text>
           </TouchableOpacity>
-          <View className="flex-row items-center justify-center gap-2">
-            <Link href="/(sidebar)/import-export" asChild>
-              <TouchableOpacity className="flex-row items-center justify-center gap-2 rounded-lg bg-blue-500 px-4 py-2">
-                <Ionicons
-                  name="folder-open-outline"
-                  size={20}
-                  color="white"
-                />
-              </TouchableOpacity>
-            </Link>
-          </View>
         </View>
       </View>
 
