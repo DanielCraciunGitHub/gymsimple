@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   currentExerciseIndexAtom,
   currentSetIndexAtom,
@@ -14,6 +14,7 @@ import {
   WorkoutSession,
 } from "@/validations";
 import { Ionicons } from "@expo/vector-icons";
+import { useAudioPlayer } from "expo-audio";
 import { router } from "expo-router";
 import { useAtom, useSetAtom } from "jotai";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -27,6 +28,8 @@ import ExerciseProgress from "@/components/ExerciseProgress";
 
 import { StarRating } from "./StarRating";
 
+const beepSound = require("@/assets/sounds/beep.wav");
+
 export default function WorkoutPlayer({
   exercises,
   settings,
@@ -36,6 +39,8 @@ export default function WorkoutPlayer({
   settings: ISettings;
   backgroundColor: string;
 }) {
+  const player = useAudioPlayer(beepSound);
+
   const [currentSetIndex, setCurrentSetIndex] = useAtom(
     currentSetIndexAtom
   );
@@ -136,6 +141,15 @@ export default function WorkoutPlayer({
     setRestPhase,
     setQuickLog,
   ]);
+
+  const playBeep = useCallback(() => {
+    player.seekTo(0);
+    player.play();
+  }, [player]);
+
+  useEffect(() => {
+    playBeep();
+  }, [prepPhase, performSetPhase, restPhase, quickLog, playBeep]);
 
   const updateActualReps = (setIndex: number, reps: string) => {
     const newReps = [...actualReps];
