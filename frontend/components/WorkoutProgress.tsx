@@ -14,7 +14,7 @@ export default function WorkoutProgress({
   const [currentExerciseIndex] = useAtom(currentExerciseIndexAtom);
   return (
     <View className="p-4">
-      <Text className="mb-3 text-center text-sm text-white opacity-90">
+      <Text className="mb-3 text-center text-lg text-white opacity-90">
         Exercise {currentExerciseIndex + 1} of {totalExercises}
       </Text>
 
@@ -45,7 +45,7 @@ export default function WorkoutProgress({
       </View>
 
       {exerciseNames[currentExerciseIndex] && (
-        <Text className="mt-2 text-center text-xs text-white opacity-75">
+        <Text className="mt-2 text-center text-4xl font-bold text-white">
           {exerciseNames[currentExerciseIndex]}
         </Text>
       )}

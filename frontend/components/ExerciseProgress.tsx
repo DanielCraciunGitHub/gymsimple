@@ -33,7 +33,7 @@ export default function ExerciseProgress({
 
   return (
     <View className="absolute left-0 right-0 top-16 z-10 px-4">
-      <Text className="mb-2 text-center text-sm text-white opacity-90">
+      <Text className="mb-2 text-center text-lg text-white opacity-90">
         {exerciseWeight?.value && exerciseWeight.value !== "0" && (
           <Text>
             {exerciseWeight.value} {exerciseWeight.unit}
