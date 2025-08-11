@@ -1,9 +1,4 @@
-import {
-  currentSetIndexAtom,
-  performSetPhaseAtom,
-  prepPhaseAtom,
-  restPhaseAtom,
-} from "@/atoms/play";
+import { currentSetIndexAtom, workoutPhaseAtom } from "@/atoms/play";
 import { useAtom } from "jotai";
 import { Text, View } from "react-native";
 
@@ -25,11 +20,10 @@ export default function ExerciseProgress({
   exerciseWeight,
 }: ExerciseProgressProps) {
   const [currentSetIndex] = useAtom(currentSetIndexAtom);
-  const [prepPhase] = useAtom(prepPhaseAtom);
-  const [performSetPhase] = useAtom(performSetPhaseAtom);
-  const [restPhase] = useAtom(restPhaseAtom);
+  const [workoutPhase] = useAtom(workoutPhaseAtom);
 
-  const displaySetIndex = prepPhase ? 0 : currentSetIndex + 1;
+  const displaySetIndex =
+    workoutPhase === "prep" ? 0 : currentSetIndex + 1;
 
   return (
     <View className="absolute left-0 right-0 top-16 z-10 px-4">
@@ -56,9 +50,9 @@ export default function ExerciseProgress({
               className={`h-3 w-3 rounded-full border-2 ${
                 index < currentSetIndex ||
                 (index === currentSetIndex &&
-                  (performSetPhase || restPhase))
+                  (workoutPhase === "perform" || workoutPhase === "rest"))
                   ? "border-blue-500 bg-blue-500"
-                  : index === currentSetIndex && prepPhase
+                  : index === currentSetIndex && workoutPhase === "prep"
                     ? "border-white bg-white"
                     : "border-white bg-transparent opacity-50"
               }`}
@@ -68,7 +62,7 @@ export default function ExerciseProgress({
               <View
                 className={`h-0.5 w-6 ${
                   index < currentSetIndex ||
-                  (index === currentSetIndex && restPhase)
+                  (index === currentSetIndex && workoutPhase === "rest")
                     ? "bg-blue-500"
                     : "bg-white opacity-50"
                 }`}

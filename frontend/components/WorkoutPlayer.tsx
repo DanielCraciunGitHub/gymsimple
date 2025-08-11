@@ -3,10 +3,8 @@ import {
   currentExerciseIndexAtom,
   currentSetIndexAtom,
   exercisesDataAtom,
-  performSetPhaseAtom,
-  prepPhaseAtom,
   quickLogAtom,
-  restPhaseAtom,
+  workoutPhaseAtom,
 } from "@/atoms/play";
 import {
   ExerciseData,
@@ -52,11 +50,7 @@ export default function WorkoutPlayer({
     new Date()
   );
 
-  const [prepPhase, setPrepPhase] = useAtom(prepPhaseAtom);
-  const [performSetPhase, setPerformSetPhase] = useAtom(
-    performSetPhaseAtom
-  );
-  const [restPhase, setRestPhase] = useAtom(restPhaseAtom);
+  const [workoutPhase, setWorkoutPhase] = useAtom(workoutPhaseAtom);
   const [quickLog, setQuickLog] = useAtom(quickLogAtom);
   const [actualReps, setActualReps] = useState<string[]>([]);
   const [exerciseRating, setExerciseRating] = useState<number>(0);
@@ -68,9 +62,7 @@ export default function WorkoutPlayer({
   const [autoRestCountdown, setAutoRestCountdown] = useState<number>(-1);
 
   useEffect(() => {
-    setPrepPhase(true);
-    setPerformSetPhase(false);
-    setRestPhase(false);
+    setWorkoutPhase("prep");
     setCurrentSetIndex(0);
     setCurrentExerciseIndex(0);
     setQuickLog(false);
@@ -79,9 +71,7 @@ export default function WorkoutPlayer({
     setExerciseRating(0);
     setWorkoutStartTime(new Date());
   }, [
-    setPrepPhase,
-    setPerformSetPhase,
-    setRestPhase,
+    setWorkoutPhase,
     setCurrentSetIndex,
     setCurrentExerciseIndex,
     setQuickLog,
@@ -101,7 +91,7 @@ export default function WorkoutPlayer({
   useEffect(() => {
     if (
       settings.autoRest &&
-      performSetPhase &&
+      workoutPhase === "perform" &&
       currentExercise?.targetReps
     ) {
       const repsTime = Number(currentExercise.targetReps) * 3;
@@ -114,9 +104,9 @@ export default function WorkoutPlayer({
             const totalSets = Number(currentExercise.targetSets);
 
             setTimeout(() => {
-              setPerformSetPhase(false);
+              setWorkoutPhase("rest");
               if (currentSet < totalSets - 1) {
-                setRestPhase(true);
+                setWorkoutPhase("rest");
               } else {
                 handleExerciseComplete();
               }
@@ -128,17 +118,15 @@ export default function WorkoutPlayer({
       }, 1000);
 
       return () => clearInterval(interval);
-    } else if (!performSetPhase) {
+    } else if (workoutPhase !== "perform") {
       setAutoRestCountdown(-1);
     }
   }, [
     settings.autoRest,
-    performSetPhase,
+    workoutPhase,
     currentExercise?.targetReps,
     currentExercise?.targetSets,
     currentSetIndex,
-    setPerformSetPhase,
-    setRestPhase,
     setQuickLog,
   ]);
 
@@ -149,7 +137,7 @@ export default function WorkoutPlayer({
 
   useEffect(() => {
     playBeep();
-  }, [prepPhase, performSetPhase, restPhase, quickLog, playBeep]);
+  }, [workoutPhase, quickLog, playBeep]);
 
   const updateActualReps = (setIndex: number, reps: string) => {
     const newReps = [...actualReps];
@@ -180,9 +168,7 @@ export default function WorkoutPlayer({
       setQuickLog(false);
       setCurrentExerciseIndex(currentExerciseIndex + 1);
       setCurrentSetIndex(0);
-      setPrepPhase(true);
-      setRestPhase(false);
-      setPerformSetPhase(false);
+      setWorkoutPhase("prep");
       setActualReps([]);
       setExerciseRating(0);
     } else {
@@ -218,9 +204,7 @@ export default function WorkoutPlayer({
       if (currentExerciseIndex < exercises.length - 1) {
         setCurrentExerciseIndex(currentExerciseIndex + 1);
         setCurrentSetIndex(0);
-        setPrepPhase(true);
-        setRestPhase(false);
-        setPerformSetPhase(false);
+        setWorkoutPhase("prep");
         setActualReps([]);
         setExerciseRating(0);
       } else {
@@ -228,6 +212,7 @@ export default function WorkoutPlayer({
       }
     } else {
       setQuickLog(true);
+      setWorkoutPhase("log");
     }
   };
 
@@ -246,7 +231,7 @@ export default function WorkoutPlayer({
           />
         )}
 
-        {prepPhase && (
+        {workoutPhase === "prep" && (
           <View className="flex-1 items-center justify-center">
             <Text className="text-center text-2xl font-bold text-white">
               Phone down. Get ready.
@@ -254,14 +239,13 @@ export default function WorkoutPlayer({
             <CountdownTimer
               durationSeconds={settings.prepTime}
               onComplete={() => {
-                setPrepPhase(false);
-                setPerformSetPhase(true);
+                setWorkoutPhase("perform");
               }}
             />
           </View>
         )}
 
-        {performSetPhase && (
+        {workoutPhase === "perform" && (
           <View className="flex-1 items-center justify-center">
             <Text className="text-center text-7xl font-bold text-white">
               {currentExercise.targetReps} reps
@@ -280,12 +264,11 @@ export default function WorkoutPlayer({
 
             <TouchableOpacity
               onPress={() => {
-                setPerformSetPhase(false);
                 if (
                   currentSetIndex <
                   Number(currentExercise.targetSets) - 1
                 ) {
-                  setRestPhase(true);
+                  setWorkoutPhase("rest");
                 } else {
                   handleExerciseComplete();
                 }
@@ -297,7 +280,7 @@ export default function WorkoutPlayer({
           </View>
         )}
 
-        {restPhase && (
+        {workoutPhase === "rest" && (
           <View className="flex-1 items-center justify-center">
             <Text className="text-center text-7xl font-bold text-white">
               Rest.
@@ -306,9 +289,8 @@ export default function WorkoutPlayer({
             <CountdownTimer
               durationSeconds={Number(currentExercise.targetRestTime)}
               onComplete={() => {
-                setRestPhase(false);
                 setCurrentSetIndex(currentSetIndex + 1);
-                setPerformSetPhase(true);
+                setWorkoutPhase("perform");
               }}
             />
           </View>

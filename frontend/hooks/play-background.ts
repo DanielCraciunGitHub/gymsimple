@@ -2,17 +2,13 @@ import { useMemo } from "react";
 import {
   davidGogginsModeAtom,
   isPausedAtom,
-  performSetPhaseAtom,
-  prepPhaseAtom,
   quickLogAtom,
-  restPhaseAtom,
+  workoutPhaseAtom,
 } from "@/atoms/play";
 import { useAtomValue } from "jotai";
 
 export const usePlayBackground = () => {
-  const prepPhase = useAtomValue(prepPhaseAtom);
-  const performSetPhase = useAtomValue(performSetPhaseAtom);
-  const restPhase = useAtomValue(restPhaseAtom);
+  const workoutPhase = useAtomValue(workoutPhaseAtom);
   const isPaused = useAtomValue(isPausedAtom);
   const quickLog = useAtomValue(quickLogAtom);
   const davidGogginsMode = useAtomValue(davidGogginsModeAtom);
@@ -25,15 +21,15 @@ export const usePlayBackground = () => {
       return "bg-red-500";
     }
 
-    if (prepPhase) {
+    if (workoutPhase === "prep") {
       return "bg-yellow-500";
     }
 
-    if (performSetPhase) {
+    if (workoutPhase === "perform") {
       return "bg-orange-500";
     }
 
-    if (restPhase) {
+    if (workoutPhase === "rest") {
       return "bg-green-500";
     }
 
@@ -42,5 +38,5 @@ export const usePlayBackground = () => {
     }
 
     return "bg-orange-500";
-  }, [isPaused, prepPhase, performSetPhase, restPhase, quickLog]);
+  }, [isPaused, workoutPhase, quickLog, davidGogginsMode]);
 };
