@@ -428,9 +428,8 @@ export function GogginsWorkoutPlayer({
       <View className="flex-row items-center justify-between px-6 py-4">
         <View className="flex-1">
           <Text className="text-2xl font-bold text-white">
-            Round {currentRound}
+            Level {currentRound}
           </Text>
-          <Text className="text-lg text-gray-300">GOGGINS MODE</Text>
         </View>
 
         {/* Large bell button to quit */}
