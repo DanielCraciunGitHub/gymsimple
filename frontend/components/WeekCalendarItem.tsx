@@ -3,13 +3,8 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import {
-  Alert,
-  Platform,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Day, nextDay } from "date-fns";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
 
 import {
   clearNotificationsByWeekday,
@@ -56,17 +51,8 @@ export default function WeekCalendarItem({
     if (event.type === "set" && date) {
       setSelectedTime(date);
 
-      const today = new Date();
-      const selectedDay = index;
-      const currentDay = today.getDay();
-      let daysUntilNext = selectedDay - currentDay;
-      if (daysUntilNext <= 0) daysUntilNext += 7;
-
-      const nextOccurrence = new Date(today);
-      nextOccurrence.setDate(today.getDate() + daysUntilNext);
-      nextOccurrence.setHours(date.getHours());
-      nextOccurrence.setMinutes(date.getMinutes());
-      nextOccurrence.setSeconds(0);
+      const nextOccurrence = nextDay(new Date(), index as Day);
+      nextOccurrence.setHours(date.getHours(), date.getMinutes(), 0, 0);
 
       await scheduleWeeklyNotification({
         title: `Gym Time 🏋️`,
@@ -74,40 +60,6 @@ export default function WeekCalendarItem({
         date: nextOccurrence,
       });
     }
-  };
-
-  const handleLongPress = () => {
-    if (!selectedTime) return;
-
-    Alert.alert(
-      "Remove Reminder",
-      `Are you sure you want to remove the reminder for ${day}?`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Remove",
-          style: "destructive",
-          onPress: async () => {
-            // TODO: handle removing notification's
-            setSelectedTime(null);
-          },
-        },
-      ]
-    );
-  };
-
-  const openTimePicker = () => {
-    setShowPicker(true);
-  };
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], {
-      hour: "numeric",
-      minute: "2-digit",
-    });
   };
 
   return (
@@ -122,10 +74,9 @@ export default function WeekCalendarItem({
             setSelectedTime(null);
             await clearNotificationsByWeekday(index + 1);
           } else {
-            openTimePicker();
+            setShowPicker(true);
           }
         }}
-        onLongPress={handleLongPress}
         className="flex-row items-center justify-between p-4"
       >
         <Text className="text-sm font-medium text-gray-600">{day}</Text>
@@ -133,7 +84,10 @@ export default function WeekCalendarItem({
           <View className="flex-row items-center gap-2">
             <Ionicons name="time-outline" size={18} color="#3B82F6" />
             <Text className="text-sm font-medium text-blue-500">
-              {formatTime(selectedTime)}
+              {selectedTime.toLocaleTimeString([], {
+                hour: "numeric",
+                minute: "2-digit",
+              })}
             </Text>
           </View>
         ) : (
