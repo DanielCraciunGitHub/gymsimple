@@ -21,8 +21,9 @@ import uuid from "react-native-uuid";
 
 import { ISettings } from "@/config/settings";
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
-import { CountdownTimer, Stopwatch } from "@/components/CountdownTimer";
+import { CountdownTimer } from "@/components/CountdownTimer";
 import ExerciseProgress from "@/components/ExerciseProgress";
+import { Stopwatch } from "@/components/Stopwatch";
 
 import { StarRating } from "./StarRating";
 
@@ -289,6 +290,7 @@ export default function WorkoutPlayer({
             <CountdownTimer
               durationSeconds={Number(currentExercise.targetRestTime)}
               onComplete={() => {
+                console.log("currentSetIndex", currentSetIndex);
                 setCurrentSetIndex(currentSetIndex + 1);
                 setWorkoutPhase("perform");
               }}
