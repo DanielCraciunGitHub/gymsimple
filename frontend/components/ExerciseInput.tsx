@@ -10,7 +10,7 @@ import {
 import uuid from "react-native-uuid";
 
 import { addTag, getTags } from "@/lib/local-storage";
-import { isValidNumber, isWholeNumber } from "@/lib/num";
+import { isValidPositiveNumber, isWholeNumber } from "@/lib/num";
 
 export const sortBySelectionOrder = (
   exercises: ExerciseDetails[]
@@ -116,7 +116,7 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
       case "weight":
         if (
           details.weight.value !== "" &&
-          !isValidNumber(details.weight.value)
+          !isValidPositiveNumber(details.weight.value)
         ) {
           setError("Weight must be a valid number");
           return false;
