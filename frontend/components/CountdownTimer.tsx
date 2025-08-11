@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { isPausedAtom } from "@/atoms/play";
 import { Ionicons } from "@expo/vector-icons";
 import { useAtom } from "jotai";
@@ -17,26 +17,17 @@ export const CountdownTimer = ({
 }: CountdownTimerProps) => {
   const [timeLeft, setTimeLeft] = useState(durationSeconds);
   const [isPaused, setIsPaused] = useAtom(isPausedAtom);
-  const onCompleteRef = useRef(onComplete);
 
-  // Update the ref whenever onComplete changes
-  useEffect(() => {
-    onCompleteRef.current = onComplete;
-  }, [onComplete]);
-
-  // Reset timer when duration changes
   useEffect(() => {
     setTimeLeft(durationSeconds);
   }, [durationSeconds]);
 
-  // Handle completion when timeLeft reaches 0
   useEffect(() => {
     if (timeLeft <= 0) {
-      onCompleteRef.current();
+      onComplete();
     }
-  }, [timeLeft]);
+  }, [timeLeft, onComplete]);
 
-  // Timer interval
   useEffect(() => {
     if (!isPaused && timeLeft > 0) {
       const interval = setInterval(() => {
@@ -62,7 +53,7 @@ export const CountdownTimer = ({
         )}
         <TouchableOpacity
           onPress={() => {
-            setTimeLeft(0);
+            setTimeLeft((prev) => (prev <= 5 ? 0 : 5));
             setIsPaused(false);
           }}
         >
