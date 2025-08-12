@@ -97,7 +97,9 @@ export default function WeekCalendarItem({
               size={18}
               color="#6B7280"
             />
-            <Text className="text-sm text-gray-500">Set reminder</Text>
+            <Text className="text-sm text-black dark:text-white">
+              Set reminder
+            </Text>
           </View>
         )}
       </TouchableOpacity>
