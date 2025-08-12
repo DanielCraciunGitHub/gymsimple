@@ -61,6 +61,7 @@ export default function WorkoutPlayer({
 
   const currentExercise = exercises[currentExerciseIndex];
   const [autoRestCountdown, setAutoRestCountdown] = useState<number>(-1);
+  const [currentRepCount, setCurrentRepCount] = useState<number>(0);
 
   useEffect(() => {
     setWorkoutPhase("prep");
@@ -70,6 +71,7 @@ export default function WorkoutPlayer({
     setCompletedExercises([]);
     setActualReps([]);
     setExerciseRating(0);
+    setCurrentRepCount(0);
     setWorkoutStartTime(new Date());
   }, [
     setWorkoutPhase,
@@ -89,6 +91,33 @@ export default function WorkoutPlayer({
     }
   }, [quickLog, currentExercise]);
 
+  const handleExerciseComplete = useCallback(() => {
+    if (settings.skipLog) {
+      if (currentExerciseIndex < exercises.length - 1) {
+        setCurrentExerciseIndex(currentExerciseIndex + 1);
+        setCurrentSetIndex(0);
+        setWorkoutPhase("prep");
+        setActualReps([]);
+        setExerciseRating(0);
+      } else {
+        router.push("/(sidebar)/(tabs)/sessions");
+      }
+    } else {
+      setQuickLog(true);
+      setWorkoutPhase("log");
+    }
+  }, [
+    settings.skipLog,
+    currentExerciseIndex,
+    exercises.length,
+    setCurrentExerciseIndex,
+    setCurrentSetIndex,
+    setWorkoutPhase,
+    setActualReps,
+    setExerciseRating,
+    setQuickLog,
+  ]);
+
   useEffect(() => {
     if (
       settings.autoRest &&
@@ -97,6 +126,7 @@ export default function WorkoutPlayer({
     ) {
       const repsTime = Number(currentExercise.targetReps) * 3;
       setAutoRestCountdown(repsTime);
+      setCurrentRepCount(0); // Reset rep count when starting perform phase
 
       const interval = setInterval(() => {
         setAutoRestCountdown((prev) => {
@@ -114,13 +144,24 @@ export default function WorkoutPlayer({
             }, 0);
             return 0;
           }
-          return prev - 1;
+
+          // Increment rep count every 3 seconds (when countdown decreases by 3)
+          const newCountdown = prev - 1;
+          const initialTime = repsTime;
+          const timeElapsed = initialTime - newCountdown;
+          const newRepCount = Math.floor(timeElapsed / 3);
+          setCurrentRepCount(
+            Math.min(newRepCount, Number(currentExercise.targetReps))
+          );
+
+          return newCountdown;
         });
       }, 1000);
 
       return () => clearInterval(interval);
     } else if (workoutPhase !== "perform") {
       setAutoRestCountdown(-1);
+      setCurrentRepCount(0);
     }
   }, [
     settings.autoRest,
@@ -129,6 +170,8 @@ export default function WorkoutPlayer({
     currentExercise?.targetSets,
     currentSetIndex,
     setQuickLog,
+    handleExerciseComplete,
+    setWorkoutPhase,
   ]);
 
   const playBeep = useCallback(() => {
@@ -200,23 +243,6 @@ export default function WorkoutPlayer({
     }
   };
 
-  const handleExerciseComplete = () => {
-    if (settings.skipLog) {
-      if (currentExerciseIndex < exercises.length - 1) {
-        setCurrentExerciseIndex(currentExerciseIndex + 1);
-        setCurrentSetIndex(0);
-        setWorkoutPhase("prep");
-        setActualReps([]);
-        setExerciseRating(0);
-      } else {
-        router.push("/(sidebar)/(tabs)/sessions");
-      }
-    } else {
-      setQuickLog(true);
-      setWorkoutPhase("log");
-    }
-  };
-
   const isReadyToProgress =
     actualReps.every((reps) => reps && Number(reps) >= 0) &&
     exerciseRating > 0;
@@ -249,19 +275,14 @@ export default function WorkoutPlayer({
         {workoutPhase === "perform" && (
           <View className="flex-1 items-center justify-center">
             <Text className="text-center text-7xl font-bold text-white">
-              {currentExercise.targetReps} reps
+              {settings.autoRest
+                ? currentRepCount
+                : currentExercise.targetReps}
             </Text>
-
-            {settings.autoRest && autoRestCountdown > 0 && (
-              <View className="mt-8 items-center">
-                <Text className="mb-2 text-lg text-gray-300">
-                  Auto rest in:
-                </Text>
-                <Text className="text-4xl font-bold text-yellow-400">
-                  {autoRestCountdown}s
-                </Text>
-              </View>
-            )}
+            <Text className="text-center text-2xl text-gray-300">
+              {settings.autoRest ? `/ ${currentExercise.targetReps}` : ""}{" "}
+              reps
+            </Text>
 
             <TouchableOpacity
               onPress={() => {
@@ -278,6 +299,14 @@ export default function WorkoutPlayer({
             >
               <Ionicons name={"play-forward"} size={100} color="white" />
             </TouchableOpacity>
+
+            {settings.autoRest && autoRestCountdown > 0 && (
+              <View className="mt-8 items-center">
+                <Text className="text-4xl font-bold text-yellow-200">
+                  {autoRestCountdown}s
+                </Text>
+              </View>
+            )}
           </View>
         )}
 
