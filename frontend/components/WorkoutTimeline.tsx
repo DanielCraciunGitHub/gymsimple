@@ -329,7 +329,7 @@ export const WorkoutTimeline: React.FC = () => {
               Today&apos;s Workout
             </Text>
             <Text className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              Estimated duration: {calculateEstimatedDuration()}
+              Estimated time: {calculateEstimatedDuration()}
             </Text>
           </View>
           <TouchableOpacity
