@@ -53,7 +53,7 @@ export const CountdownTimer = ({
         )}
         <TouchableOpacity
           onPress={() => {
-            setTimeLeft((prev) => (prev <= 5 ? 0 : 5));
+            setTimeLeft((prev) => (prev <= 5 ? 0 : prev - 5));
             setIsPaused(false);
           }}
         >
